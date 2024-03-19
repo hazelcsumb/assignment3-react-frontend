@@ -10,6 +10,28 @@ import React, { useState } from 'react';
 
 const AssignmentGrade = (props) => {
 
+    // assignment_grade.js
+// Fetch assignments from the server
+    fetch('/api/assignments')
+        .then(response => response.json())
+        .then(assignments => {
+            // Process assignments and display them in the DOM
+            const assignmentList = document.getElementById('assignmentList');
+            assignments.forEach(assignment => {
+                const listItem = document.createElement('li');
+                listItem.textContent = assignment.name;
+                const gradeInput = document.createElement('input');
+                gradeInput.type = 'number';
+                gradeInput.min = 0;
+                gradeInput.max = 100;
+                gradeInput.placeholder = 'Enter grade';
+                listItem.appendChild(gradeInput);
+                assignmentList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching assignments:', error);
+        });
  
     return(
         <>
