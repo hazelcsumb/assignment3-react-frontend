@@ -25,6 +25,7 @@ const InstructorHome = () => {
             </table>
             <Link to='/sections' state={term}>Show Sections</Link>
             <Link to='/assignmentAdd' style={{ display: 'block', marginTop: '20px' }}>Add Assignment</Link>
+            <Link to='/assignmentGrade' style={{ display: 'block', marginTop: '20'}}>Grade Assignments</Link>
         </>
     )
 };

@@ -6,8 +6,8 @@ export const StudentHome = () => {
       <div>
           <h1>Student Home</h1>
           <p>View class schedule. Drop course.</p> 
-          <p>Enroll in a course.</p>
-          <p>View assignments and grades.</p>
+          <p><Link to="/courseEnroll">Enroll in a course.</Link></p>
+          <p><Link to="/studentAssignments">View assignments and grades.</Link></p>
           <p>View Transcript.</p>
       </div>
       
@@ -19,8 +19,8 @@ export const StudentLayout = () => {
     <>
       <nav>
         <Link to="/">Home</Link> &nbsp;|&nbsp;   
-        <Link to="/schedule">VIew Class Schedule</Link>&nbsp;|&nbsp;  
-        <Link to="/addCourse">Enroll in a class</Link>&nbsp;|&nbsp;
+        <Link to="/schedule">View Class Schedule</Link>&nbsp;|&nbsp;
+        <Link to="/courseEnroll">Enroll in a class</Link>&nbsp;|&nbsp;
         <Link to="/studentAssignments">View Assignments</Link>&nbsp;|&nbsp;  
         <Link to="/transcript">View Transcript</Link>
       </nav>

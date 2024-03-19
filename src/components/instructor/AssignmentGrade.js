@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // instructor enters students' grades for an assignment
 // fetch the grades using the URL /assignment/{id}/grades
@@ -10,34 +10,74 @@ import React, { useState } from 'react';
 
 const AssignmentGrade = (props) => {
 
-    // assignment_grade.js
-// Fetch assignments from the server
-    fetch('/api/assignments')
-        .then(response => response.json())
-        .then(assignments => {
-            // Process assignments and display them in the DOM
-            const assignmentList = document.getElementById('assignmentList');
-            assignments.forEach(assignment => {
-                const listItem = document.createElement('li');
-                listItem.textContent = assignment.name;
-                const gradeInput = document.createElement('input');
-                gradeInput.type = 'number';
-                gradeInput.min = 0;
-                gradeInput.max = 100;
-                gradeInput.placeholder = 'Enter grade';
-                listItem.appendChild(gradeInput);
-                assignmentList.appendChild(listItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching assignments:', error);
+    // State to store the list of GradeDTO objects fetched from server
+    const [grades, setGrades] = useState([]);
+
+    // Function to handle score changes for each grade input field
+    const onChange = (index, newScore) => {
+        const updatedGrades = grades.map((grade, idx) => {
+            if (idx === index) {
+                return {...grade, score: newScore }; //update the score of the modified grade
+            }
+            return grade; // return unmodified grades as is
         });
- 
+        setGrades(updatedGrades); // update the state with the new grades array
+    };
+
+    // Fetch grades from the server
+    useEffect(() => {
+        const fetchGrades = async () => {
+            try{
+                // URL
+                const response = await fetch(`/api/assignment/${props.assignmentId}/grades`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch grades');
+                }
+                const data = await response.json(); // parse the JSON response
+                setGrades(data); // set fetched grades data to state
+            } catch(error) {
+                console.error('Error fetching grades ', error);
+            }
+        };
+
+        fetchGrades();
+    }, [props.assignmentId]); // dependency array re-fetch if assignmentId changes
+
+
+    // Display grades as a table
     return(
-        <>
-            <h3>Not implemented</h3>
-        </>          
+        <div>
+            <h3>Assignment Grades</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Grade ID</th>
+                    <th>Student Name</th>
+                    <th>Student Email</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    grades.map((grade,index) => (
+                    <tr key = {grade.gradeId}>
+                        <td>{grade.gradeId}</td>
+                        <td>{grade.studentName}</td>
+                        <td>{grade.studentEmail}</td>
+                        <td>
+                            <input
+                                type = "text"
+                                name = "score"
+                                value = {grade.score}
+                                onChange = {(e) => onChange(index, e.target.value)}
+                            />
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
-}
+};
 
 export default AssignmentGrade;
