@@ -13,6 +13,23 @@ const AssignmentsView = (props) => {
 
     const location = useLocation();
     const {secNo, courseId, secId} = location.state;
+
+    // assignments_view.js
+    // Fetch assignments from the server
+    fetch('/api/assignments')
+        .then(response => response.json())
+        .then(assignments => {
+            // Process assignments and display them in the DOM
+            const assignmentList = document.getElementById('assignmentList');
+            assignments.forEach(assignment => {
+                const listItem = document.createElement('li');
+                listItem.textContent = assignment.name;
+                assignmentList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching assignments:', error);
+        });
      
     return(
         <> 
