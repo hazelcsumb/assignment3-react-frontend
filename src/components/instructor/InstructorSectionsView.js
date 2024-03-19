@@ -12,8 +12,24 @@ import React, {useState, useEffect} from 'react';
 
 const InstructorSectionsView = (props) => {
 
-    
-     
+    // instructor_sections_view.js
+// Fetch sections/groups from the server
+    fetch('/api/sections')
+        .then(response => response.json())
+        .then(sections => {
+            // Process sections and display them in the DOM
+            const sectionList = document.getElementById('sectionList');
+            sections.forEach(section => {
+                const listItem = document.createElement('li');
+                listItem.textContent = section.name;
+                sectionList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching sections:', error);
+        });
+
+
     return(
         <> 
            <h3>Not implemented</h3>

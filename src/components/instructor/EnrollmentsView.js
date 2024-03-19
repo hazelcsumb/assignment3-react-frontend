@@ -14,6 +14,24 @@ const EnrollmentsView = (props) => {
     const location = useLocation();
     const {secNo, courseId, secId} = location.state;
 
+    // enrollments_view.js
+// Fetch enrolled students from the server
+    fetch('/api/enrollments')
+        .then(response => response.json())
+        .then(enrollments => {
+            // Process enrollments and display them in the DOM
+            const enrollmentList = document.getElementById('enrollmentList');
+            enrollments.forEach(enrollment => {
+                const listItem = document.createElement('li');
+                listItem.textContent = enrollment.studentName;
+                enrollmentList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching enrollments:', error);
+        });
+
+
     return(
         <> 
             <h3>Not implemented</h3>   
