@@ -9,8 +9,29 @@ import React, {useState, useEffect} from 'react';
 // studentId=3 will be removed in assignment 7.
 
 const CourseEnroll = (props) => {
-     
- 
+
+    // course_enroll.js
+    document.getElementById('enrollForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Fetch form data
+        const courseId = document.getElementById('courseId').value;
+
+        // Send data to the server to enroll the student in the course
+        // Example: Using fetch API
+        fetch(`/api/enroll/${courseId}`, {
+            method: 'POST'
+        }).then(response => {
+            // Handle response from the server
+            // Example: Display success message
+            alert('Enrolled successfully!');
+            // Optionally, redirect to another page or update the UI
+        }).catch(error => {
+            // Handle error
+            console.error('Error enrolling in the course:', error);
+        });
+    });
+
+
     return(
         <>
            <h3>Not implemented</h3>

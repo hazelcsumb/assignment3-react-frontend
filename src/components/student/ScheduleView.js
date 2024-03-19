@@ -9,8 +9,25 @@ import React, {useState} from 'react';
 // issue a DELETE with URL /enrollment/{enrollmentId}
 
 const ScheduleView = (props) => {
-    
-   
+
+    // schedule_view.js
+// Fetch schedule for the student from the server
+    fetch('/api/student/schedule')
+        .then(response => response.json())
+        .then(schedule => {
+            // Process schedule and display it in the DOM
+            const scheduleDiv = document.getElementById('schedule');
+            schedule.forEach(course => {
+                const courseElement = document.createElement('div');
+                courseElement.textContent = `Course: ${course.name}, Time: ${course.time}`;
+                scheduleDiv.appendChild(courseElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching student schedule:', error);
+        });
+
+
     return(
         < > 
             <h3>Not implemented</h3>
