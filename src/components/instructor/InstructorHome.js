@@ -24,6 +24,7 @@ const InstructorHome = () => {
             </tbody>
             </table>
             <Link to='/sections' state={term}>Show Sections</Link>
+            <Link to='/assignmentAdd' style={{ display: 'block', marginTop: '20px' }}>Add Assignment</Link>
         </>
     )
 };
