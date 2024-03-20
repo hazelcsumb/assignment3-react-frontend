@@ -5,10 +5,7 @@ export const StudentHome = () => {
   return (
       <div>
           <h1>Student Home</h1>
-          <p>View class schedule. Drop course.</p> 
-          <p><Link to="/courseEnroll">Enroll in a course.</Link></p>
-          <p><Link to="/studentAssignments">View assignments and grades.</Link></p>
-          <p>View Transcript.</p>
+          <p>View and change class information.</p> 
       </div>
       
       );
