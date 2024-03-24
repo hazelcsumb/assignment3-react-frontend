@@ -15,10 +15,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 
 const Transcript = (props) => {
   const [transcripts, setTranscripts] = useState([]);
-  console.log(transcripts);
 
-
-  useEffect(()=> {
+  useEffect(() => {
     fetch(`${SERVER_URL}/transcripts?studentId=${studentId}`)
       .then(response => response.json())
       .then(transcripts => {
