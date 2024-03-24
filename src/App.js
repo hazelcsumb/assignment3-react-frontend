@@ -2,8 +2,6 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// date-fns
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import UsersView from './components/admin/UsersView';
 import CoursesView from './components/admin/CoursesView';
