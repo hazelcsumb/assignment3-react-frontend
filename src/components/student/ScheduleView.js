@@ -8,17 +8,19 @@ import React, { useState } from "react";
 // to drop a course
 // issue a DELETE with URL /enrollment/{enrollmentId}
 import { SERVER_URL, semesters, years } from "../../Constants";
+import YearSemesterForm from "../common/YearSemesterForm";
 
 const ScheduleView = (props) => {
   // schedule_view.js
   const [error, setError] = useState("");
+  const [year, setYear] = useState(years[0]);
+  const [semester, setSemester] = useState(semesters[0]);
   const [showSchedule, setShowSchedule] = useState(false);
   const [schedule, setSchedule] = useState([]);
   const getClassSchedule = async (e) => {
     // Fetch schedule for the student from the server
     e.preventDefault();
-    const [year, semester] = e.target;
-    fetch(`${SERVER_URL}/enrollments?studentId=3&year=${year.value}&semester=${semester.value}`)
+    fetch(`${SERVER_URL}/enrollments?studentId=3&year=${year}&semester=${semester}`)
       .then((response) => response.json())
       .then((schedule) => {
         setShowSchedule(true);
@@ -54,23 +56,14 @@ const ScheduleView = (props) => {
 
   return (
     <div>
-      <form onSubmit={getClassSchedule}>
-        <label htmlFor="year">Year</label>
-        <select name="year" id="year" required>
-          <option disabled value="Select a year">Select a year</option>
-          {
-            years.map((year) => <option value={year}>{year}</option>)
-          }
-        </select>
-        <label htmlFor="semester">Semester</label>
-        <select name="semester" id="semester" required>
-          <option disabled value="Select a semester">Select a semester</option>
-          {
-            semesters.map((semester) => <option value={semester}>{semester}</option>)
-          }
-        </select>
-        <button type="submit">View Class Schedule</button>
-      </form>
+      <YearSemesterForm 
+        setYear={setYear}
+        year={year}
+        setSemester={setSemester}
+        semester={semester}
+        handleSubmit={getClassSchedule}
+        label="View Class Schedule"
+      />
       <div id="schedule">
 
         {

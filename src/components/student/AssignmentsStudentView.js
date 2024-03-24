@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { studentId, SERVER_URL} from '../../Constants';
 import dayjs from 'dayjs';
+import YearSemesterForm from '../common/YearSemesterForm';
 
 // student views a list of assignments and assignment grades 
 // use the URL  /assignments?studentId= &year= &semester=
@@ -49,27 +50,18 @@ const AssignmentsStudentView = (props) => {
   // assignments_student_view.js
   if (!submitted)
   return (
-    <form onSubmit={handleSubmit} style={{marginTop:20}}>
-      <DatePicker 
-        label="Pick a year"
-        views={['year']} 
-        minDate={dayjs('2022-01-01T15:30')}
-        maxDate={dayjs('2024-12-30T15:30')}
-        onChange={(newYear) => setYear(newYear.$y)}
-      />
-      <Select
-        label="Semester"
-        onChange={(newSemester) => setSemester(newSemester.target.value)}
-        required
-      >
-        <MenuItem value={"Fall"}>Fall</MenuItem>
-        <MenuItem value={"Spring"}>Spring</MenuItem>
-      </Select>
-      <button type='submit'>Submit</button>
-    </form>
+    <YearSemesterForm 
+      setYear={setYear}
+      year={year}
+      setSemester={setSemester}
+      semester={semester}
+      handleSubmit={handleSubmit}
+      label="View Assignments"
+    />
   )
 
   return(
+    <>
     <TableContainer component={Paper}>
       <Table aria-label="assignments table">
         <TableHead>
@@ -92,6 +84,11 @@ const AssignmentsStudentView = (props) => {
         </TableBody>
       </Table>
     </TableContainer>
+      <button 
+        onClick={() => setSubmitted(false)}
+        style={{marginTop:"10px", padding:"10px"}}
+      >OK</button>
+    </>
   );
 };
 
