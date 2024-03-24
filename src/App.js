@@ -1,6 +1,10 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// date-fns
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import UsersView from './components/admin/UsersView';
 import CoursesView from './components/admin/CoursesView';
 import SectionsView from './components/admin/SectionsView';
@@ -29,51 +33,57 @@ function App() {
 
   if (userType==='ADMIN') {
     return (
-      <div className="App">
-      <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<AdminLayout />}>
-              <Route index element={<AdminHome />} />
-              <Route path="users" element={<UsersView />} />
-              <Route path="courses" element={<CoursesView />} />
-              <Route path="sections" element={<SectionsView />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="App">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<AdminLayout />}>
+                <Route index element={<AdminHome />} />
+                <Route path="users" element={<UsersView />} />
+                <Route path="courses" element={<CoursesView />} />
+                <Route path="sections" element={<SectionsView />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </LocalizationProvider>
     )
   } else if (userType==='STUDENT') {
     return (
-      <div className="App">
-      <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<StudentLayout />}>
-              <Route index element={<StudentHome />} />
-              <Route path="schedule" element={<ScheduleView />} />
-              <Route path="studentAssignments" element={<StudentAssignmentsView />} />
-              <Route path="transcript" element={<Transcript />} />
-              <Route path="courseEnroll" element={<CourseEnroll />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="App">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<StudentLayout />}>
+                <Route index element={<StudentHome />} />
+                <Route path="schedule" element={<ScheduleView />} />
+                <Route path="studentAssignments" element={<StudentAssignmentsView />} />
+                <Route path="transcript" element={<Transcript />} />
+                <Route path="courseEnroll" element={<CourseEnroll />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </LocalizationProvider>
     )
   } else if (userType==='INSTRUCTOR') {
     return (
-      <div className="App">
-      <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<InstructorLayout />}>
-              <Route index element={<InstructorHome />} />
-              <Route path="assignments" element={<AssignmentsView />} />
-              <Route path="enrollments" element={<EnrollmentsView />} />
-              <Route path="sections" element={<InstructorSectionsView />} />
-              <Route path="assignmentAdd" element={<AssignmentAdd />} />
-              <Route path="assignmentGrade" element={<AssignmentGrade />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className="App">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<InstructorLayout />}>
+                <Route index element={<InstructorHome />} />
+                <Route path="assignments" element={<AssignmentsView />} />
+                <Route path="enrollments" element={<EnrollmentsView />} />
+                <Route path="sections" element={<InstructorSectionsView />} />
+                <Route path="assignmentAdd" element={<AssignmentAdd />} />
+                <Route path="assignmentGrade" element={<AssignmentGrade />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </LocalizationProvider>
     )
 
   } else {
