@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {SERVER_URL} from "../../Constants";
 
 // students gets a list of all courses taken and grades
 // use the URL /transcript?studentId=
