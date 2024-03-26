@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Select, MenuItem} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { studentId, SERVER_URL} from '../../Constants';
-import dayjs from 'dayjs';
 import YearSemesterForm from '../common/YearSemesterForm';
 
 // student views a list of assignments and assignment grades 

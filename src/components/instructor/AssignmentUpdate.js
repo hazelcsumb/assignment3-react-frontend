@@ -42,6 +42,7 @@ const AssignmentUpdate = (props)  => {
     }
 
     // assignment_update.js
+  /*
     document.getElementById('updateForm').addEventListener('submit', function(event) {
         event.preventDefault();
         // Fetch form data
@@ -50,7 +51,7 @@ const AssignmentUpdate = (props)  => {
 
         // Send data to the server to update the assignment
         // Example: Using fetch API
-        fetch('/api/updateAssignment', {
+        fetch(`${SERVER_URL}/assignments`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,6 +59,13 @@ const AssignmentUpdate = (props)  => {
             body: JSON.stringify({
                 assignmentName: updatedAssignmentName,
                 dueDate: updatedDueDate
+
+           int id,
+        String title,
+        String dueDate,
+        String courseId,
+        int secId,
+        int secNo
             })
         }).then(response => {
             // Handle response from the server
@@ -69,6 +77,7 @@ const AssignmentUpdate = (props)  => {
             console.error('Error updating assignment:', error);
         });
     });
+        */
 
     return (
         <>
@@ -77,7 +86,7 @@ const AssignmentUpdate = (props)  => {
                 <DialogTitle>Edit Assignment</DialogTitle>
                 <DialogContent  style={{paddingTop: 20}} >
                     <h4>{editMessage}</h4>
-                    <TextField style={{padding:10}} autoFocus fullWidth label="assignmentId" name="assignmentId" value={assignment.assignmentId}  InputProps={{readOnly: true, }}  />
+                    <TextField style={{padding:10}} autoFocus fullWidth label="assignmentId" name="assignmentId" value={assignment.id}  InputProps={{readOnly: true, }}  />
                     <TextField style={{padding:10}} fullWidth label="title" name="title" value={assignment.title} onChange={editChange}  />
                     <TextField style={{padding:10}} fullWidth label="dueDate" name="dueDate" value={assignment.dueDate} onChange={editChange}  />
                 </DialogContent>
