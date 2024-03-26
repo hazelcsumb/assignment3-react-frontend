@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import {SERVER_URL} from "../../Constants";
 
 // student views a list of assignments and assignment grades 
@@ -9,29 +11,67 @@ import {SERVER_URL} from "../../Constants";
 // display a table with columns  Course Id, Assignment Title, Assignment DueDate, Score
 
 const AssignmentsStudentView = (props) => {
+    const studentId = 3; // Placeholder until login is implemented
+    const headers = ['Course', 'Title', 'Due Date', 'Score'];
+    const [assignments, setAssignments] = useState([]);
+    const [message, setMessage] = useState('');
+    const [search, setSearch] = useState({ year: '', semester: '' });
 
-    // assignments_student_view.js
-// Fetch assignments for the student from the server
-    fetch('/api/student/assignments')
-        .then(response => response.json())
-        .then(assignments => {
-            // Process assignments and display them in the DOM
-            const assignmentList = document.getElementById('assignmentList');
-            assignments.forEach(assignment => {
-                const listItem = document.createElement('li');
-                listItem.textContent = assignment.name;
-                assignmentList.appendChild(listItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching student assignments:', error);
-        });
+    const fetchAssignments = async () => {
+        const { year, semester } = search;
+        if (!year.trim() || isNaN(Number(year))) {
+            setMessage('Invalid year');
+            return;
+        }
 
-    return(
-        <> 
-            <h3>Not implemented</h3>   
-        </>
+        try {
+            const response = await fetch(`${SERVER_URL}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`);
+            if (!response.ok) throw new Error('Failed to fetch assignments');
+            const data = await response.json();
+            setAssignments(data);
+            setMessage('');
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+        }
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setSearch(prev => ({ ...prev, [name]: value }));
+    };
+
+    return (
+        <div>
+            <h3>Assignments</h3>
+            <TextField autoFocus label="Year" name="year" value={search.year} onChange={handleChange} />
+            <TextField label="Semester" name="semester" value={search.semester} onChange={handleChange} />
+            <Button variant="contained" onClick={fetchAssignments}>Search</Button>
+            <h5 className="Error">{message}</h5>
+            {assignments.length > 0 ? (
+                <table className="Center Border" style={{ marginTop: 10 }}>
+                    <thead>
+                    <tr>
+                        {headers.map((header) => (
+                            <th key={header}>{header}</th>
+                        ))}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {assignments.map((assignment, idx) => (
+                        <tr key={idx}>
+                            <td>{assignment.courseId}</td>
+                            <td>{assignment.title}</td>
+                            <td>{assignment.dueDate}</td>
+                            <td>{assignment.score}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>No assignments found.</p>
+            )}
+        </div>
     );
-}
+};
 
 export default AssignmentsStudentView;

@@ -9,28 +9,45 @@ import {SERVER_URL} from "../../Constants";
 
 const Transcript = (props) => {
 
-    // transcript.js
-// Fetch transcript for the student from the server
-    fetch('/api/student/transcript')
-        .then(response => response.json())
-        .then(transcript => {
-            // Process transcript and display it in the DOM
-            const transcriptDiv = document.getElementById('transcript');
-            transcript.forEach(course => {
-                const courseElement = document.createElement('div');
-                courseElement.textContent = `Course: ${course.name}, Grade: ${course.grade}`;
-                transcriptDiv.appendChild(courseElement);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching student transcript:', error);
-        });
+    const studentId = 3; // Replace with dynamic data as appropriate
+    const headers = ['Year', 'Semester', 'CourseId', 'SectionId', 'Title', 'Credits', 'Grade'];
+    const [transcripts, setTranscripts] = useState([]);
+    const [message, setMessage] = useState('');
 
-    return(
-        <> 
-            <h3>Not implemented</h3>
+    useEffect(() => {
+        const fetchTranscripts = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/transcripts?studentId=${studentId}`);
+                if (!response.ok) throw new Error('Failed to fetch transcripts');
+                const data = await response.json();
+                setTranscripts(data);
+            } catch (error) {
+                setMessage(`Error: ${error.message}`);
+            }
+        };
+        fetchTranscripts();
+    }, [studentId]);
+
+    return (
+        <>
+            <h3>Transcript</h3>
+            <h5 className="Error">{message}</h5>
+            <table className="Center Border">
+                <thead>
+                <tr>{headers.map((header, idx) => <th key={idx}>{header}</th>)}</tr>
+                </thead>
+                <tbody>
+                {transcripts.map((record, idx) => (
+                    <tr key={idx}>
+                        {headers.map((header) => (
+                            <td key={`${header}-${idx}`}>{record[header.toLowerCase()]}</td>
+                        ))}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
         </>
     );
-}
+};
 
 export default Transcript;
