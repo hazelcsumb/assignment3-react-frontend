@@ -15,7 +15,7 @@ export const StudentLayout = () => {
   return (
     <>
       <nav>
-        <Link to="/">Home</Link> &nbsp;|&nbsp;   
+        <Link id="sections" to="/">Home</Link> &nbsp;|&nbsp;
         <Link to="/schedule">View Class Schedule</Link>&nbsp;|&nbsp;
         <Link to="/courseEnroll">Enroll in a class</Link>&nbsp;|&nbsp;
         <Link to="/studentAssignments">View Assignments</Link>&nbsp;|&nbsp;  

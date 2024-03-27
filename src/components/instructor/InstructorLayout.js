@@ -6,7 +6,7 @@ const InstructorLayout = () => {
   return (
     <>
       <nav>
-        <Link to="/">Home</Link> 
+        <Link id="sections" to="/">Home</Link>
       </nav>
       <h1>Instructor Home</h1>
       Manage assignments and grades.
