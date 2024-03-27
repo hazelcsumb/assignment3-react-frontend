@@ -56,7 +56,7 @@ const ScheduleView = (props) => {
 
   return (
     <div>
-      <YearSemesterForm 
+      <YearSemesterForm
         setYear={setYear}
         year={year}
         setSemester={setSemester}
@@ -74,7 +74,7 @@ const ScheduleView = (props) => {
             :
             (
               schedule.map((course) => (
-                <div key={course.courseId}>
+                <div id="scourseId" key={course.courseId}>
                   {`Course: ${course.courseId}, Time: ${course.times}`}
                   <button type="submit" onClick={() => deleteCourse(course.enrollmentId)}>Drop course</button>
                 </div>
