@@ -105,7 +105,7 @@ const AssignmentAdd = (props)  => {
 
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit">Add</Button>
+              <Button id="submit" type="submit">Add</Button>
             </DialogActions>
           </form>
         </DialogContent>
