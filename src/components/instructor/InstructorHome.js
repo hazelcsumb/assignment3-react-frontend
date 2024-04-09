@@ -10,23 +10,9 @@ const InstructorHome = () => {
     }
 
     return (
-        <>
-            <table className="Center">
-            <tbody>
-            <tr>
-                <td>Year:</td>
-                <td><input type="text" id="year" name="year" value={term.year} onChange={onChange} /></td>
-            </tr>
-            <tr>
-                <td>Semester:</td>
-                <td><input type="text" id="semester" name="semester" value={term.semester} onChange={onChange} /></td>
-            </tr>
-            </tbody>
-            </table>
+        <div style={{marginTop: 20}}>
             <Link to='/sections' state={term}>Show Sections</Link>
-            <Link to='/assignmentAdd' style={{ display: 'block', marginTop: '20px' }}>Add Assignment</Link>
-            <Link to='/assignmentGrade' style={{ display: 'block', marginTop: '20'}}>Grade Assignments</Link>
-        </>
+        </div>
     )
 };
 

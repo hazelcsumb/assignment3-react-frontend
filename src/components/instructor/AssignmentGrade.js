@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SERVER_URL } from '../../Constants';
+import { GRADEBOOK_SERVICE } from '../../Constants';
 import { useLocation } from "react-router-dom";
 
 // instructor enters students' grades for an assignment
@@ -31,7 +31,7 @@ const AssignmentGrade = (props) => {
   const fetchGrades = async () => {
     try{
       // URL
-      const response = await fetch(`${SERVER_URL}/assignments/${assignmentId}/grades`);
+      const response = await fetch(`${GRADEBOOK_SERVICE}/assignments/${assignmentId}/grades`);
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
@@ -56,7 +56,7 @@ const AssignmentGrade = (props) => {
         },
         body: JSON.stringify(grades)
       }
-      const response = await fetch(`${SERVER_URL}/grades`, options);
+      const response = await fetch(`${GRADEBOOK_SERVICE}/grades`, options);
       if (response.ok) {
         console.log("Grades updated!")
         await fetchGrades();
@@ -67,9 +67,12 @@ const AssignmentGrade = (props) => {
     }
   }
 
+  if (grades.length === 0) 
+    return <div style={{color: "red", marginTop: 20}}>No students to grade for this assignment!</div>
+
   // Display grades as a table
   return(
-    <div>
+    <div style={{display: "flex", flexDirection: "column", gap: 20, alignContent: "center", justifyContent: "center"}}>
       <h3>Assignment Grades</h3>
       <table>
         <thead>

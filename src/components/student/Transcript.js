@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { SERVER_URL, studentId } from '../../Constants';
+import { REGISTRAR_SERVICE, studentId } from '../../Constants';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 // students gets a list of all courses taken and grades
@@ -17,7 +17,7 @@ const Transcript = (props) => {
   const [transcripts, setTranscripts] = useState([]);
 
   useEffect(() => {
-    fetch(`${SERVER_URL}/transcripts?studentId=${studentId}`)
+    fetch(`${REGISTRAR_SERVICE}/transcripts?studentId=${studentId}`)
       .then(response => response.json())
       .then(transcripts => {
         // Process transcript and display it in the DOM

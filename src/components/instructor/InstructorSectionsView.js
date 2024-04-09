@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { SERVER_URL, years, semesters } from '../../Constants';
+import { years, semesters, GRADEBOOK_SERVICE } from '../../Constants';
 import YearSemesterForm from '../common/YearSemesterForm';
 import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
@@ -31,7 +31,7 @@ const InstructorSectionsView = () => {
 
   const handleSubmit = async () => {
     setSubmitted(true);
-    fetch(`${SERVER_URL}/sections?email=${email}&year=${year}&semester=${semester}`)
+    fetch(`${GRADEBOOK_SERVICE}/sections?email=${email}&year=${year}&semester=${semester}`)
       .then(response => response.json())
       .then(sectionsFromResponse => {
         setSections(sectionsFromResponse);

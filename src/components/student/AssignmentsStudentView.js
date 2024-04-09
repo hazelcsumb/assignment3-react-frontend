@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { studentId, SERVER_URL} from '../../Constants';
+import { GRADEBOOK_SERVICE, studentId} from '../../Constants';
 import YearSemesterForm from '../common/YearSemesterForm';
 
 // student views a list of assignments and assignment grades 
@@ -27,7 +27,7 @@ const AssignmentsStudentView = (props) => {
     e.preventDefault();
     console.log("Submitting")
     setSubmitted(true);
-    fetch(`${SERVER_URL}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`)
+    fetch(`${GRADEBOOK_SERVICE}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`)
       .then(response => response.json())
       .then(data => {
         // Update state with the fetched assignments

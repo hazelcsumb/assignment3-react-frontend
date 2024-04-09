@@ -5,7 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {SERVER_URL} from '../../Constants';
+import { REGISTRAR_SERVICE } from '../../Constants';
 
 /*
  * Dialog for edit a section
@@ -46,7 +46,7 @@ const SectionAdd = (props)  => {
 
     const addSection = async (section) => {
         try {
-          const response = await fetch (`${SERVER_URL}/sections`,
+          const response = await fetch (`${REGISTRAR_SERVICE}/sections`,
             {
               method: 'POST',
               headers: {
