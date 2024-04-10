@@ -31,7 +31,7 @@ const AssignmentGrade = (props) => {
   const fetchGrades = async () => {
     try{
       // URL
-      const response = await fetch(`${GRADEBOOK_SERVICE}/assignments/${assignmentId}/grades`);
+      const response = await fetch(`${GRADEBOOK_SERVICE}/assignment/${assignmentId}/grades`);
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
