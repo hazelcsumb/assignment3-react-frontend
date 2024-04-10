@@ -21,7 +21,7 @@ function SectionsView(props) {
         } else {
           try {
             const response = await fetch(`${
-GRADEBOOK_SERVICE}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
+REGISTRAR_SERVICE}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
             if (response.ok) {
               const data = await response.json();
               setSections(data);

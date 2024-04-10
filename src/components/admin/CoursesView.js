@@ -15,7 +15,7 @@ function CoursesView(props) {
 
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${GRADEBOOK_SERVICE}/courses`);
+        const response = await fetch(`${REGISTRAR_SERVICE}/courses`);
         if (response.ok) {
           const courses = await response.json();
           setCourses(courses);
