@@ -12,18 +12,11 @@ function CoursesView() {
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
 
-    const [ message, setMessage ] = useState('');
-
     const fetchCourses = async () => {
       try {
         const response = await api.get(`${baseURL}/courses`);
-        if (response.ok) {
-          const courses = await response.json();
-          setCourses(courses);
-        } else {
-          const json = await response.json();
-          setMessage("response error: "+json.message);
-        }
+        const courses = await response.json();
+        setCourses(courses);
       } catch (err) {
         setMessage("network error: "+err);
       }  
@@ -36,75 +29,34 @@ function CoursesView() {
     const saveCourse = async (course) => {
       try {
         const response = await api.put(`${baseURL}/courses`, JSON.stringify(course));
-        if (response.ok) {
-          setMessage("course saved")
-          fetchCourses();
-        } else {
-          const json = await response.json();
-          setMessage("response error: "+json.message);
-        }
+        const json = await response.json();
+        setMessage("course saved")
+        fetchCourses();
       } catch (err) {
         setMessage("network error: "+err);
       }
-    } catch (err) {
-      setMessage("network error: " + err);
-    }
   };
 
     const addCourse = async (course) => {
       try {
         const response = await api.post(`${baseURL}/courses`, JSON.stringify(course));
-        if (response.ok) {
-          setMessage("course added")
-          fetchCourses();
-        } else {
-          const rc = await response.json();
-          setMessage(rc.message);
-        }
+        const rc = await response.json();
+        setMessage("course added")
+        fetchCourses();
       } catch (err) {
         setMessage("network error: "+err);
       }
-    } catch (err) {
-      setMessage("network error: " + err);
-    }
   };
 
     const deleteCourse = async (courseId) => {
       try {
         const response = await api.delete(`${baseURL}/courses/${courseId}`);
-        if (response.ok) {
-          setMessage("Course deleted");
-          fetchCourses();
-        } else {
-          const rc = await response.json();
-          setMessage("Delete failed "+rc.message);
-        }
+        const rc = await response.json();
+        setMessage("Course deleted");
+        fetchCourses();
       } catch (err) {
         setMessage("network error: "+err);
       }
-    } catch (err) {
-      setMessage("network error: " + err);
-    }
-  };
-
-  const deleteCourse = async (courseId) => {
-    try {
-      const response = await fetch(`${baseURL}/courses/${courseId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        setMessage("Course deleted");
-        fetchCourses();
-      } else {
-        const rc = await response.json();
-        setMessage("Delete failed " + rc.message);
-      }
-    } catch (err) {
-      setMessage("network error: " + err);
-    }
   };
 
   const onDelete = (e) => {

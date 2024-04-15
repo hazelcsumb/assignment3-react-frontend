@@ -17,13 +17,8 @@ function UsersView(props) {
     const fetchUsers = async () => {
       try {
         const response = await api.get(`${baseURL}/users`);
-        if (response.ok) {
-          const users = await response.json();
-          setUsers(users);
-        } else {
-          const json = await response.json();
-          setMessage("response error: "+json.message);
-        }
+        const users = await response.json();
+        setUsers(users);
       } catch (err) {
         setMessage("network error: "+err);
       }  
@@ -36,13 +31,9 @@ function UsersView(props) {
     const saveUser = async (user) => {
       try {
         const response = await api.put(`${baseURL}/users`, JSON.stringify(user));
-        if (response.ok) {
-          setMessage("user saved")
-          fetchUsers();
-        } else {
-          const rc = await response.json();
-          setMessage(rc.message);
-        }
+        const rc = await response.json();
+        setMessage("user saved");
+        fetchUsers();
       } catch (err) {
         setMessage("network error: "+err);
       }   
@@ -51,14 +42,9 @@ function UsersView(props) {
     const addUser = async (user) => {
       try {
         const response = await  api.post(`${baseURL}/users`, JSON.stringify(user));
-        if (response.ok) {
-          const newuser = await response.json();
-          setMessage("user added id="+newuser.id);
-          fetchUsers();
-        } else {
-          const rc = await response.json();
-          setMessage(rc.message);
-        }
+        const newuser = await response.json();
+        setMessage("user added id="+newuser.id);
+        fetchUsers();
       } catch (err) {
         setMessage("network error: "+err);
       }
@@ -67,13 +53,9 @@ function UsersView(props) {
     const deleteUser = async (id) => {
       try {
         const response = await api.delete(`${baseURL}/users/${id}`);
-        if (response.ok) {
-          setMessage("User deleted");
-          fetchUsers();
-        } else {
-          const rc = await response.json();
-          setMessage(rc.message);
-        } 
+        const rc = await response.json();
+        setMessage("User deleted");
+        fetchUsers();
       } catch (err) {
         setMessage("network error: "+err);
       }

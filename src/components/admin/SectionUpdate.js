@@ -43,12 +43,8 @@ const SectionUpdate = (props)  => {
     const saveSection = async (section) => {
         try {
           const response = await api.put(`${baseURL}/sections`, JSON.stringify(section));
-          if (response.ok) {
-            setEditMessage("section saved");
-          } else {
-            const rc = await response.json();
-            setEditMessage(rc.message);
-          }
+          const rc = await response.json();
+          setEditMessage("section saved");
         } catch (err) {
           setEditMessage("network error: "+err);
         }
