@@ -31,10 +31,7 @@ export const StudentHome = () => {
   return (
       <div>
           <h1>Student Home</h1>
-          <p>View class schedule. Drop course.</p> 
-          <p>Enroll in a course.</p>
-          <p>View assignments and grades</p>
-          <p>View Transcript</p>
+          <p>Choose a link above to get started!</p>
       </div>
       
       );
