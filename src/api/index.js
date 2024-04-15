@@ -3,12 +3,15 @@ import { baseURL } from "../Constants";
 
 /*
  *
+ * Axios API
+ * https://axios-http.com/docs/intro
  *
  * GET call
  * let response = await api.get(`${baseURL}/some/route`);
  *
  * POST call
  * response = await api.post(`${baseURL}/some/route`, body);
+ * https://axios-http.com/docs/post_example
  *
  * The data is stored in response.data
  * setData(response.data);
