@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import { REGISTRAR_URL} from '../../Constants';
 import { api } from "../../api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
@@ -14,7 +13,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 // Lists enrollments and grades for student using URL /transcripts?studentId=
 // Displays enrollments in table
 
-const Transcript = (props) => {
+const Transcript = () => {
   const [transcripts, setTranscripts] = useState([]);
 
   useEffect(() => {

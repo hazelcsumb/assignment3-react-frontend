@@ -37,7 +37,7 @@ export const StudentHome = () => {
       );
 };
 
-export const StudentLayout = (props) => {
+export const StudentLayout = () => {
   return (
     <>
       <nav>
