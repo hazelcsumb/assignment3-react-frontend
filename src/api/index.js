@@ -25,11 +25,11 @@ import { baseURL } from "../Constants";
  * View sample code in src/student/ScheduleView.js to see how it is used
  * with try/catch blocks and async/await
  *
-*/
+ */
 export const api = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
-    'Authorization': sessionStorage.getItem("jwt"),
+    Authorization: sessionStorage.getItem("jwt"),
   },
 });

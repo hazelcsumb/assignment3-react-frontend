@@ -1,138 +1,139 @@
-import React, {useState, useEffect} from 'react';
-import {Link, useLocation} from 'react-router-dom'
-import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import AssignmentUpdate from './AssignmentUpdate';
-import AssignmentAdd from './AssignmentAdd';
-import Button from '@mui/material/Button';
-import {GRADEBOOK_URL} from '../../Constants';
-import AssignmentGrade from './AssignmentGrade';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import AssignmentUpdate from "./AssignmentUpdate";
+import AssignmentAdd from "./AssignmentAdd";
+import Button from "@mui/material/Button";
+import { baseURL } from "../../Constants";
+import AssignmentGrade from "./AssignmentGrade";
 
 // instructor views assignments for their section
-// use location to get the section value 
-// 
+// use location to get the section value
+//
 // GET assignments using the URL /sections/{secNo}/assignments
 // returns a list of AssignmentDTOs
-// display a table with columns 
+// display a table with columns
 // assignment id, title, dueDate and buttons to grade, edit, delete each assignment
 
-const AssignmentsView = (props) => {
-
+const AssignmentsView = () => {
   const location = useLocation();
-  const {secNo, courseId, secId} = location.state;
-  const headers = ['AssignmentId', 'Title', 'DueDate',  '', ''];
-  const [assignments, setAssignments] = useState([    ]);
-  const [message, setMessage] = useState('');
+  const { secNo, courseId, secId } = location.state;
+  const headers = ["AssignmentId", "Title", "DueDate", "", ""];
+  const [assignments, setAssignments] = useState([]);
+  const [message, setMessage] = useState("");
 
   const fetchAssignments = async () => {
     try {
-      const response = await fetch(`${GRADEBOOK_URL}/sections/${secNo}/assignments`);
+      const response = await fetch(
+        `${baseURL}/sections/${secNo}/assignments`,
+      );
       if (response.ok) {
         const assignments = await response.json();
         setAssignments(assignments);
       } else {
         const json = await response.json();
-        setMessage("response error: "+json.message);
+        setMessage("response error: " + json.message);
       }
     } catch (err) {
-      setMessage("network error: "+err);
+      setMessage("network error: " + err);
     }
-  }
+  };
 
-  useEffect( () => {
+  useEffect(() => {
     fetchAssignments();
   }, []);
 
   const saveAssignment = async (assignment) => {
     try {
       // const response = await fetch (`${SERVER_URL}/sections/${secNo}/assignments`,
-      const response = await fetch (`${GRADEBOOK_URL}/assignments`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(assignment),
-        });
+      const response = await fetch(`${baseURL}/assignments`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(assignment),
+      });
       if (response.ok) {
-        setMessage("Assignment saved")
+        setMessage("Assignment saved");
         fetchAssignments();
       } else {
         const json = await response.json();
-        setMessage("response error: "+json.message);
+        setMessage("response error: " + json.message);
       }
     } catch (err) {
-      setMessage("network error: "+err);
+      setMessage("network error: " + err);
     }
-  }
+  };
 
   const addAssignment = async (assignment) => {
     try {
       const newAssignment = {
-        ...assignment, 
+        ...assignment,
         courseId,
         secId,
-        secNo
+        secNo,
       };
 
-      const response = await fetch (`${GRADEBOOK_URL}/assignments`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newAssignment),
-        });
+      const response = await fetch(`${baseURL}/assignments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newAssignment),
+      });
       if (response.ok) {
-        setMessage("Assignment added")
+        setMessage("Assignment added");
         fetchAssignments();
       } else {
         const rc = await response.json();
         setMessage(rc.message);
       }
     } catch (err) {
-      setMessage("network error: "+err);
+      setMessage("network error: " + err);
     }
-  }
+  };
 
   const deleteAssignment = async (assignmentId) => {
     try {
-      const response = await fetch (`${GRADEBOOK_URL}/assignments/${assignmentId}`,
+      const response = await fetch(
+        `${baseURL}/assignments/${assignmentId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        });
+        },
+      );
       if (response.ok) {
         setMessage("Assignment deleted");
         fetchAssignments();
       } else {
         const rc = await response.json();
-        setMessage("Delete failed "+rc.message);
+        setMessage("Delete failed " + rc.message);
       }
     } catch (err) {
-      setMessage("network error: "+err);
+      setMessage("network error: " + err);
     }
-  }
+  };
 
   const onDelete = (e) => {
     const row_idx = e.target.parentNode.parentNode.rowIndex - 1;
     const assignmentId = assignments[row_idx].id;
     confirmAlert({
-      title: 'Confirm to delete',
-      message: 'Do you really want to delete?',
+      title: "Confirm to delete",
+      message: "Do you really want to delete?",
       buttons: [
         {
-          label: 'Yes',
-          onClick: () => deleteAssignment(assignmentId)
+          label: "Yes",
+          onClick: () => deleteAssignment(assignmentId),
         },
         {
-          label: 'No',
-        }
-      ]
+          label: "No",
+        },
+      ],
     });
-  }
+  };
 
   // // assignments_view.js
   // // Fetch assignments from the server
@@ -151,10 +152,14 @@ const AssignmentsView = (props) => {
   //         console.error('Error fetching assignments:', error);
   //     });
 
-  if (assignments.length === 0) 
-    return <div style={{color: "red", marginTop: 20}}>No assignments for this section!</div>
+  if (assignments.length === 0)
+    return (
+      <div style={{ color: "red", marginTop: 20 }}>
+        No assignments for this section!
+      </div>
+    );
 
-  return(
+  return (
     <>
       <div>
         <h3>Assignments</h3>
@@ -162,7 +167,9 @@ const AssignmentsView = (props) => {
         <table className="Center">
           <thead>
             <tr>
-              {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
+              {headers.map((s, idx) => (
+                <th key={idx}>{s}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -171,18 +178,25 @@ const AssignmentsView = (props) => {
                 <td>{a.id}</td>
                 <td>{a.title}</td>
                 <td>{a.dueDate}</td>
-                <td><AssignmentUpdate assignment={a} save={saveAssignment}/></td>
-                <td><Button onClick={onDelete}>Delete</Button></td>
-                <td><Link to="/assignmentGrade" state={{assignmentId: a.id}}>Grade</Link></td>
+                <td>
+                  <AssignmentUpdate assignment={a} save={saveAssignment} />
+                </td>
+                <td>
+                  <Button onClick={onDelete}>Delete</Button>
+                </td>
+                <td>
+                  <Link to="/assignmentGrade" state={{ assignmentId: a.id }}>
+                    Grade
+                  </Link>
+                </td>
               </tr>
-
             ))}
           </tbody>
         </table>
-        <AssignmentAdd save={addAssignment}/>
+        <AssignmentAdd save={addAssignment} />
       </div>
     </>
   );
-}
+};
 
 export default AssignmentsView;

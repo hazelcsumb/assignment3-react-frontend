@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { baseURL} from '../../Constants';
+import React, { useState, useEffect } from "react";
+import { baseURL } from "../../Constants";
 import { api } from "../../api";
 
-// students displays a list of open sections for a 
+// students displays a list of open sections for a
 // use the URL /sections/open
 // the REST api returns a list of SectionDTO objects
 
@@ -20,13 +20,12 @@ import { api } from "../../api";
 // Displays success or error message from POST
 
 const CourseEnroll = () => {
-
   // State to store the list of open sections fetched from server
   const [openSections, setOpenSections] = useState([]);
   const [error, setError] = useState("");
 
   // State to store the user's selected section to enroll in
-  const [selectedSection, setSelectedSection] = useState('');
+  const [selectedSection, setSelectedSection] = useState("");
 
   useEffect(() => {
     // using the URL /sections/open to get sections that are open
@@ -35,9 +34,9 @@ const CourseEnroll = () => {
         const response = await api.get(`${baseURL}/sections/open`);
         setOpenSections(response.data);
       } catch (error) {
-        console.error('Error fetching open sections: ', error);
+        console.error("Error fetching open sections: ", error);
       }
-    }
+    };
     fetchOpenSections();
   }, []); // empty dependency array means this runs only once after initial rendering
 
@@ -50,11 +49,11 @@ const CourseEnroll = () => {
     //const response = await api.post(`${baseURL}/enrollments/sections/${selectedSection}?studentId=${3}`);
     try {
       await api.post(`${baseURL}/enrollments/sections/${selectedSection}`);
-      setSelectedSection(''); // resets selected section state
+      setSelectedSection(""); // resets selected section state
       setError("");
-      alert('Enrolled successfully!'); // success message
+      alert("Enrolled successfully!"); // success message
     } catch (error) {
-      console.error('Error enrolling in the course: ', error);
+      console.error("Error enrolling in the course: ", error);
       setError(error.response.data.message);
     }
   };
@@ -84,7 +83,7 @@ const CourseEnroll = () => {
 
   // Note: make selection required to ensure a section a chosen
   // Also display section name and number
-  return(
+  return (
     <div>
       <h3>Enroll in a Course Section</h3>
       <form onSubmit={handleSubmit}>
@@ -103,10 +102,11 @@ const CourseEnroll = () => {
         </select>
         <button type="submit">Enroll</button>
       </form>
-      <div id="error" style={{color: "red", marginTop: 20}}>{error}</div>
+      <div id="error" style={{ color: "red", marginTop: 20 }}>
+        {error}
+      </div>
     </div>
   );
 };
-
 
 export default CourseEnroll;

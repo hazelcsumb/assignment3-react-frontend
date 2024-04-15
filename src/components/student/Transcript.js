@@ -1,11 +1,19 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import { api } from "../../api";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 // students gets a list of all courses taken and grades
 // use the URL /transcript?studentId=
-// the REST api returns a list of EnrollmentDTO objects 
-// the table should have columns for 
+// the REST api returns a list of EnrollmentDTO objects
+// the table should have columns for
 //  Year, Semester, CourseId, SectionId, Title, Credits, Grade
 //
 // Rubric:
@@ -25,7 +33,7 @@ const Transcript = () => {
       } catch (error) {
         console.error(error);
       }
-    }
+    };
     getTranscipts();
   }, []);
 
@@ -33,13 +41,11 @@ const Transcript = () => {
   // Fetch transcript for the student from the server
   if (transcripts.length === 0) {
     return (
-      <div style={{color: "red", marginTop: 20}}>
-        No transcripts found!
-      </div>
+      <div style={{ color: "red", marginTop: 20 }}>No transcripts found!</div>
     );
   }
 
-  return(
+  return (
     <TableContainer component={Paper}>
       <Table aria-label="assignments table">
         <TableHead>
@@ -67,6 +73,6 @@ const Transcript = () => {
       </Table>
     </TableContainer>
   );
-}
+};
 
 export default Transcript;

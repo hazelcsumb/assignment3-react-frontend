@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 
 // complete the code.
 // instructor adds an assignment to a section
 // use mui Dialog with assignment fields Title and DueDate
 // issue a POST using URL /assignments to add the assignment
 
-const AssignmentAdd = (props)  => {
+const AssignmentAdd = (props) => {
   const [open, setOpen] = useState(false); // controls the dialog's open/close state
-  const [assignmentName, setAssignmentName] = useState(''); //state for the assignment's name
-  const [dueDate, setDueDate] = useState(''); // state for the assignment's due date
+  const [assignmentName, setAssignmentName] = useState(""); //state for the assignment's name
+  const [dueDate, setDueDate] = useState(""); // state for the assignment's due date
 
   // handles opening of the dialog
   const handleClickOpen = () => {
@@ -25,22 +32,20 @@ const AssignmentAdd = (props)  => {
   const handleSubmit = (event) => {
     event.preventDefault(); // prevents the default form submission action
 
-
     // preparing the assignment data to be sent to the server
 
-        const assignmentData = {
-            title: assignmentName,
-            dueDate: dueDate,
-        };
+    const assignmentData = {
+      title: assignmentName,
+      dueDate: dueDate,
+    };
     try {
       props.save(assignmentData);
-      alert('Assignment added successfully!');
+      alert("Assignment added successfully!");
       handleClose();
-      setAssignmentName('');
-      setDueDate('');
-    }
-    catch (error) {
-      alert('Assignment was unable to save. Please try again.');
+      setAssignmentName("");
+      setDueDate("");
+    } catch (error) {
+      alert("Assignment was unable to save. Please try again.");
     }
 
     /*
@@ -74,7 +79,9 @@ const AssignmentAdd = (props)  => {
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>Add Assignment</Button>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Add Assignment
+      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add Assignment</DialogTitle>
         <DialogContent>
@@ -91,20 +98,22 @@ const AssignmentAdd = (props)  => {
               onChange={(e) => setAssignmentName(e.target.value)}
             />
             <TextField
-              margin = "dense"
+              margin="dense"
               id="dueDate"
               label="Due Date"
               type="date"
               fullWidth
               variant="outlined"
-              InputLabelProps={{ shrink: true}}
+              InputLabelProps={{ shrink: true }}
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
 
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button id="submit" type="submit">Add</Button>
+              <Button id="submit" type="submit">
+                Add
+              </Button>
             </DialogActions>
           </form>
         </DialogContent>
