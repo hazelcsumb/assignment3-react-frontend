@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { REGISTRAR_URL} from '../../Constants';
+import { api } from "../../api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 // students gets a list of all courses taken and grades
@@ -17,20 +18,27 @@ const Transcript = (props) => {
   const [transcripts, setTranscripts] = useState([]);
 
   useEffect(() => {
-    fetch(`${REGISTRAR_URL}/transcripts?studentId=${3}`)
-      .then(response => response.json())
-      .then(transcripts => {
-        // Process transcript and display it in the DOM
-        setTranscripts(transcripts);
-      })
-      .catch(error => {
-        console.error('Error fetching student transcript:', error);
-      });
-
+    // fetch(`${REGISTRAR_URL}/transcripts`, {headers})
+    const getTranscipts = async () => {
+      try {
+        const response = await api.get("/transcripts");
+        setTranscripts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getTranscipts();
   }, []);
 
   // transcript.js
   // Fetch transcript for the student from the server
+  if (transcripts.length === 0) {
+    return (
+      <div style={{color: "red", marginTop: 20}}>
+        No transcripts found!
+      </div>
+    );
+  }
 
   return(
     <TableContainer component={Paper}>
@@ -47,7 +55,7 @@ const Transcript = (props) => {
         </TableHead>
         <TableBody>
           {transcripts.map((transcript) => (
-            <TableRow key={transcript.id}>
+            <TableRow key={transcript.enrollmentId}>
               <TableCell>{transcript.year}</TableCell>
               <TableCell>{transcript.semester}</TableCell>
               <TableCell>{transcript.courseId}</TableCell>
