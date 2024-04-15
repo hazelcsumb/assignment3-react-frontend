@@ -4,7 +4,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import CourseUpdate from './CourseUpdate';
 import CourseAdd from './CourseAdd';
 import Button from '@mui/material/Button';
-import {REGISTRAR_URL} from '../../Constants';
+import {baseURL} from '../../Constants';
+import {api} from '../../api';
 
 function CoursesView(props) {
     const headers = ['CourseId', 'Title', 'Credits',  '', ''];
@@ -15,7 +16,7 @@ function CoursesView(props) {
 
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${REGISTRAR_URL}/courses`);
+        const response = await api.get(`${baseURL}/courses`);
         if (response.ok) {
           const courses = await response.json();
           setCourses(courses);
@@ -34,7 +35,7 @@ function CoursesView(props) {
 
     const saveCourse = async (course) => {
       try {
-        const response = await fetch (`${REGISTRAR_URL}/courses`, 
+        const response = await api.put(`${baseURL}/courses`,
             {
               method: 'PUT',
               headers: {
@@ -56,7 +57,7 @@ function CoursesView(props) {
 
     const addCourse = async (course) => {
       try {
-        const response = await fetch (`${REGISTRAR_URL}/courses`, 
+        const response = await api.post(`${baseURL}/courses`,
             {
               method: 'POST',
               headers: {
@@ -78,7 +79,7 @@ function CoursesView(props) {
 
     const deleteCourse = async (courseId) => {
       try {
-        const response = await fetch (`${REGISTRAR_URL}/courses/${courseId}`, 
+        const response = await api.delete(`${baseURL}/courses/${courseId}`,
             {
               method: 'DELETE',
               headers: {
