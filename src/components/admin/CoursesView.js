@@ -1,73 +1,106 @@
-import React, { useState, useEffect } from "react";
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
-import CourseUpdate from "./CourseUpdate";
-import CourseAdd from "./CourseAdd";
-import Button from "@mui/material/Button";
-import { baseURL } from "../../Constants";
-import { api } from "../../api";
+import React, {useState, useEffect} from 'react';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import CourseUpdate from './CourseUpdate';
+import CourseAdd from './CourseAdd';
+import Button from '@mui/material/Button';
+import {baseURL} from '../../Constants';
+import {api} from '../../api';
 
 function CoursesView() {
   const headers = ["CourseId", "Title", "Credits", "", ""];
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
 
-  const fetchCourses = async () => {
-    try {
-      // const response = await fetch(`${REGISTRAR_URL}/courses`);
-      const response = await api.get(`${baseURL}/courses`);
-      if (response.ok) {
-        const courses = await response.json();
-        setCourses(courses);
-      } else {
-        const json = await response.json();
-        setMessage("response error: " + json.message);
+    const [ message, setMessage ] = useState('');
+
+    const fetchCourses = async () => {
+      try {
+        const response = await api.get(`${baseURL}/courses`);
+        if (response.ok) {
+          const courses = await response.json();
+          setCourses(courses);
+        } else {
+          const json = await response.json();
+          setMessage("response error: "+json.message);
+        }
+      } catch (err) {
+        setMessage("network error: "+err);
+      }  
+    }
+
+    useEffect( () => { 
+      fetchCourses();
+    },  []);
+
+    const saveCourse = async (course) => {
+      try {
+        const response = await api.put(`${baseURL}/courses`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              }, 
+              body: JSON.stringify(course),
+            });
+        if (response.ok) {
+          setMessage("course saved")
+          fetchCourses();
+        } else {
+          const json = await response.json();
+          setMessage("response error: "+json.message);
+        }
+      } catch (err) {
+        setMessage("network error: "+err);
       }
     } catch (err) {
       setMessage("network error: " + err);
     }
   };
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const saveCourse = async (course) => {
-    try {
-      const response = await fetch(`${baseURL}/courses`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(course),
-      });
-      if (response.ok) {
-        setMessage("course saved");
-        fetchCourses();
-      } else {
-        const json = await response.json();
-        setMessage("response error: " + json.message);
+    const addCourse = async (course) => {
+      try {
+        const response = await api.post(`${baseURL}/courses`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              }, 
+              body: JSON.stringify(course),
+            });
+        if (response.ok) {
+          setMessage("course added")
+          fetchCourses();
+        } else {
+          const rc = await response.json();
+          setMessage(rc.message);
+        }
+      } catch (err) {
+        setMessage("network error: "+err);
       }
     } catch (err) {
       setMessage("network error: " + err);
     }
   };
 
-  const addCourse = async (course) => {
-    try {
-      const response = await fetch(`${baseURL}/courses`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(course),
-      });
-      if (response.ok) {
-        setMessage("course added");
-        fetchCourses();
-      } else {
-        const rc = await response.json();
-        setMessage(rc.message);
+    const deleteCourse = async (courseId) => {
+      try {
+        const response = await api.delete(`${baseURL}/courses/${courseId}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              }, 
+            });
+        if (response.ok) {
+          setMessage("Course deleted");
+          fetchCourses();
+        } else {
+          const rc = await response.json();
+          setMessage("Delete failed "+rc.message);
+        }
+      } catch (err) {
+        setMessage("network error: "+err);
       }
     } catch (err) {
       setMessage("network error: " + err);
