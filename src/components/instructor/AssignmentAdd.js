@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { SERVER_URL } from '../../Constants';
 
 // complete the code.
 // instructor adds an assignment to a section

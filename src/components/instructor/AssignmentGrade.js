@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GRADEBOOK_SERVICE } from '../../Constants';
+import { GRADEBOOK_URL} from '../../Constants';
 import { useLocation } from "react-router-dom";
 
 // instructor enters students' grades for an assignment
@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 //  <input type="text" name="score" value={g.score} onChange={onChange} />
 
 
-const AssignmentGrade = (props) => {
+const AssignmentGrade = () => {
 
   // State to store the list of GradeDTO objects fetched from server
   const location = useLocation();
@@ -31,7 +31,7 @@ const AssignmentGrade = (props) => {
   const fetchGrades = async () => {
     try{
       // URL
-      const response = await fetch(`${GRADEBOOK_SERVICE}/assignment/${assignmentId}/grades`);
+      const response = await fetch(`${GRADEBOOK_URL}/assignment/${assignmentId}/grades`);
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
@@ -56,7 +56,7 @@ const AssignmentGrade = (props) => {
         },
         body: JSON.stringify(grades)
       }
-      const response = await fetch(`${GRADEBOOK_SERVICE}/grades`, options);
+      const response = await fetch(`${GRADEBOOK_URL}/grades`, options);
       if (response.ok) {
         console.log("Grades updated!")
         await fetchGrades();

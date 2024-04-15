@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 // to drop a course
 // issue a DELETE with URL /enrollment/{enrollmentId}
-import { REGISTRAR_SERVICE, semesters, studentId, years } from "../../Constants";
+import { REGISTRAR_URL, semesters, years } from "../../Constants";
 import YearSemesterForm from "../common/YearSemesterForm";
 
 const ScheduleView = (props) => {
@@ -20,7 +20,7 @@ const ScheduleView = (props) => {
   const getClassSchedule = async (e) => {
     // Fetch schedule for the student from the server
     e.preventDefault();
-    fetch(`${REGISTRAR_SERVICE}/enrollments?studentId=${studentId}&year=${year}&semester=${semester}`)
+    fetch(`${REGISTRAR_URL}/enrollments?studentId=${3}&year=${year}&semester=${semester}`)
       .then((response) => response.json())
       .then((schedule) => {
         setShowSchedule(true);

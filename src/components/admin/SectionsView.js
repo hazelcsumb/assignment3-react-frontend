@@ -4,7 +4,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import SectionUpdate from './SectionUpdate';
 import SectionAdd from './SectionAdd';
 import Button from '@mui/material/Button';
-import { GRADEBOOK_SERVICE, REGISTRAR_SERVICE } from '../../Constants';
+import { REGISTRAR_URL } from '../../Constants';
 
 function SectionsView(props) {
     const headers = ['SecNo', 'CourseId', 'SecId',  'Year', 'Semester', 'Building', 'Room', 'Times', '', ''];
@@ -21,7 +21,7 @@ function SectionsView(props) {
         } else {
           try {
             const response = await fetch(`${
-REGISTRAR_SERVICE}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
+REGISTRAR_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
             if (response.ok) {
               const data = await response.json();
               setSections(data);
@@ -37,7 +37,7 @@ REGISTRAR_SERVICE}/courses/${search.courseId}/sections?year=${search.year}&semes
 
     const deleteSection = async (secNo) => {
       try {
-        const response = await fetch (`${REGISTRAR_SERVICE}/sections/${secNo}`, 
+        const response = await fetch (`${REGISTRAR_URL}/sections/${secNo}`, 
         {
           method: 'DELETE',
           headers: {

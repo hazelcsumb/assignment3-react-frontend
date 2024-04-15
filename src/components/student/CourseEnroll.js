@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { REGISTRAR_SERVICE, studentId } from '../../Constants';
+import { REGISTRAR_URL} from '../../Constants';
 
 // students displays a list of open sections for a 
 // use the URL /sections/open
@@ -28,7 +28,7 @@ const CourseEnroll = (props) => {
 
   useEffect(() => {
     // using the URL /sections/open to get sections that are open
-    fetch(`${REGISTRAR_SERVICE}/sections/open`)
+    fetch(`${REGISTRAR_URL}/sections/open`)
       .then(response => response.json())
       .then(data => setOpenSections(data)) // Set fetched data (SectionDTO objects)
       .catch(error => console.error('Error fetching open sections: ', error));
@@ -40,7 +40,7 @@ const CourseEnroll = (props) => {
     // Issue a POST request to enroll in the selected section
     // **use studentId = 3 temporarily, will be removed in assignment 7
 
-    fetch(`${REGISTRAR_SERVICE}/enrollments/sections/${selectedSection}?studentId=${studentId}`, {
+    fetch(`${REGISTRAR_URL}/enrollments/sections/${selectedSection}?studentId=${3}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

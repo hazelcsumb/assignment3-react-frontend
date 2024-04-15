@@ -5,7 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import AssignmentUpdate from './AssignmentUpdate';
 import AssignmentAdd from './AssignmentAdd';
 import Button from '@mui/material/Button';
-import {GRADEBOOK_SERVICE} from '../../Constants';
+import {GRADEBOOK_URL} from '../../Constants';
 import AssignmentGrade from './AssignmentGrade';
 
 // instructor views assignments for their section
@@ -26,7 +26,7 @@ const AssignmentsView = (props) => {
 
   const fetchAssignments = async () => {
     try {
-      const response = await fetch(`${GRADEBOOK_SERVICE}/sections/${secNo}/assignments`);
+      const response = await fetch(`${GRADEBOOK_URL}/sections/${secNo}/assignments`);
       if (response.ok) {
         const assignments = await response.json();
         setAssignments(assignments);
@@ -46,7 +46,7 @@ const AssignmentsView = (props) => {
   const saveAssignment = async (assignment) => {
     try {
       // const response = await fetch (`${SERVER_URL}/sections/${secNo}/assignments`,
-      const response = await fetch (`${GRADEBOOK_SERVICE}/assignments`,
+      const response = await fetch (`${GRADEBOOK_URL}/assignments`,
         {
           method: 'PUT',
           headers: {
@@ -75,7 +75,7 @@ const AssignmentsView = (props) => {
         secNo
       };
 
-      const response = await fetch (`${GRADEBOOK_SERVICE}/assignments`,
+      const response = await fetch (`${GRADEBOOK_URL}/assignments`,
         {
           method: 'POST',
           headers: {
@@ -97,7 +97,7 @@ const AssignmentsView = (props) => {
 
   const deleteAssignment = async (assignmentId) => {
     try {
-      const response = await fetch (`${GRADEBOOK_SERVICE}/assignments/${assignmentId}`,
+      const response = await fetch (`${GRADEBOOK_URL}/assignments/${assignmentId}`,
         {
           method: 'DELETE',
           headers: {

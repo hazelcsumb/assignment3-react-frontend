@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
-import { GRADEBOOK_SERVICE } from '../../Constants';
+import { GRADEBOOK_URL } from '../../Constants';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import  Select from "@mui/material/Select";
 import  MenuItem  from "@mui/material/MenuItem";
@@ -47,7 +47,7 @@ const EnrollmentsView = (props) => {
       },
       body: JSON.stringify(enrollments),
     };
-    fetch(`${GRADEBOOK_SERVICE}/enrollments`, options)
+    fetch(`${GRADEBOOK_URL}/enrollments`, options)
     .then(_ => {
         alert("Grade updated in the database.");
     })
@@ -59,7 +59,7 @@ const EnrollmentsView = (props) => {
   // enrollments_view.js
   // Fetch enrolled students from the server
   useEffect(() => {
-    fetch(`${GRADEBOOK_SERVICE}/sections/${secNo}/enrollments`)
+    fetch(`${GRADEBOOK_URL}/sections/${secNo}/enrollments`)
       .then(response => response.json())
       .then(enrollments => {
         setEnrollments(enrollments);
