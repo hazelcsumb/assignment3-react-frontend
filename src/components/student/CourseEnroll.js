@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { REGISTRAR_URL} from '../../Constants';
+import { baseURL} from '../../Constants';
+import { api } from "../../api";
 
 // students displays a list of open sections for a 
 // use the URL /sections/open
@@ -18,44 +19,45 @@ import { REGISTRAR_URL} from '../../Constants';
 // Issues a POST request to /enrollments/section/{secNo}?studentId=
 // Displays success or error message from POST
 
-const CourseEnroll = (props) => {
+const CourseEnroll = () => {
 
   // State to store the list of open sections fetched from server
   const [openSections, setOpenSections] = useState([]);
+  const [error, setError] = useState("");
 
   // State to store the user's selected section to enroll in
   const [selectedSection, setSelectedSection] = useState('');
 
   useEffect(() => {
     // using the URL /sections/open to get sections that are open
-    fetch(`${REGISTRAR_URL}/sections/open`)
-      .then(response => response.json())
-      .then(data => setOpenSections(data)) // Set fetched data (SectionDTO objects)
-      .catch(error => console.error('Error fetching open sections: ', error));
+    const fetchOpenSections = async () => {
+      try {
+        const response = await api.get(`${baseURL}/sections/open`);
+        console.log(response);
+        setOpenSections(response.data);
+      } catch (error) {
+        console.error('Error fetching open sections: ', error);
+      }
+    }
+    fetchOpenSections();
   }, []); // empty dependency array means this runs only once after initial rendering
 
   // Handles form submission for enrolling
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // prevents the default form submission
     // Issue a POST request to enroll in the selected section
     // **use studentId = 3 temporarily, will be removed in assignment 7
 
-    fetch(`${REGISTRAR_URL}/enrollments/sections/${selectedSection}?studentId=${3}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => {
-        if (response.ok) {
-          alert('Enrolled successfully!'); // success message
-          setSelectedSection(''); // resets selected section state
-        } else {
-          response.json()
-          .then((data) => alert(data.message))
-        }
-      })
-      .catch(error => console.error('Error enrolling in the course: ', error));
+    //const response = await api.post(`${baseURL}/enrollments/sections/${selectedSection}?studentId=${3}`);
+    try {
+      await api.post(`${baseURL}/enrollments/sections/${selectedSection}`);
+      setSelectedSection(''); // resets selected section state
+      setError("");
+      alert('Enrolled successfully!'); // success message
+    } catch (error) {
+      console.error('Error enrolling in the course: ', error);
+      setError(error.response.data.message);
+    }
   };
   /*
     // course_enroll.js
@@ -102,6 +104,7 @@ const CourseEnroll = (props) => {
         </select>
         <button type="submit">Enroll</button>
       </form>
+      <div id="error" style={{color: "red", marginTop: 20}}>{error}</div>
     </div>
   );
 };
