@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { GRADEBOOK_URL} from '../../Constants';
+import { baseURL, semesters, years} from '../../Constants';
+import { api } from "../../api";
 import YearSemesterForm from '../common/YearSemesterForm';
 
 // student views a list of assignments and assignment grades 
@@ -16,27 +17,24 @@ import YearSemesterForm from '../common/YearSemesterForm';
 // Fetches data using URL /assignments?studentId=&year=&semester
 // Displays assignments in table format
 
-const AssignmentsStudentView = (props) => {
+const AssignmentsStudentView = () => {
   // State to store the liist of assignments
   const [assignments, setAssignments] = useState([]);
-  const [year, setYear] = useState(0);
-  const [semester, setSemester] = useState("");
+  const [year, setYear] = useState(years[0]);
+  const [semester, setSemester] = useState(semesters[0]);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting")
     setSubmitted(true);
-    fetch(`${GRADEBOOK_URL}/assignments?studentId=${3}&year=${year}&semester=${semester}`)
-      .then(response => response.json())
-      .then(data => {
-        // Update state with the fetched assignments
-        setAssignments(data);
-      })
-      .catch(error => {
+    try {
+      const response = await api.get(`${baseURL}/assignments?year=${year}&semester=${semester}`);
+    // Update state with the fetched assignments
+      setAssignments(response.data);
+    } catch (error) {
         console.error('Error fetching student assignments:', error);
-      });
-
+    }
   }
 
   useEffect(() => {
@@ -56,6 +54,13 @@ const AssignmentsStudentView = (props) => {
       label="View Assignments"
     />
   )
+  else if (submitted && assignments.length === 0) {
+    return (
+    <div style={{color: "red", marginTop: 20}}>
+        No assignments found for you! How lucky!
+    </div>
+    );
+  }
 
   return(
     <>
@@ -71,7 +76,7 @@ const AssignmentsStudentView = (props) => {
         </TableHead>
         <TableBody>
           {assignments.map((assignment) => (
-            <TableRow key={assignment.id}>
+            <TableRow key={assignment.assignmentId}>
               <TableCell>{assignment.courseId}</TableCell>
               <TableCell>{assignment.title}</TableCell>
               <TableCell>{assignment.dueDate}</TableCell>
