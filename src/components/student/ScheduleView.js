@@ -7,8 +7,10 @@ import React, { useState } from "react";
 
 // to drop a course
 // issue a DELETE with URL /enrollment/{enrollmentId}
-import { REGISTRAR_URL, semesters, years } from "../../Constants";
+import { baseURL, semesters, years } from "../../Constants";
 import YearSemesterForm from "../common/YearSemesterForm";
+import { api } from "../../api";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const ScheduleView = (props) => {
   // schedule_view.js
@@ -20,38 +22,31 @@ const ScheduleView = (props) => {
   const getClassSchedule = async (e) => {
     // Fetch schedule for the student from the server
     e.preventDefault();
-    fetch(`${REGISTRAR_URL}/enrollments?studentId=${3}&year=${year}&semester=${semester}`)
-      .then((response) => response.json())
-      .then((schedule) => {
-        setShowSchedule(true);
-        setSchedule(schedule);
-        setError("");
-      })
-      .catch((error) => {
-        console.error("Error fetching student schedule:", error);
-        setShowSchedule(false);
-        setError(error.message);
-      });
+    try {
+      const response = await api.get(`${baseURL}/enrollments?studentId=${3}&year=${year}&semester=${semester}`)
+      setShowSchedule(true);
+      setError("");
+      setSchedule(response.data);
+    } catch (error) {
+      console.error("Error fetching student schedule:", error);
+      setShowSchedule(false);
+      setError(error.message);
+    }
   }
 
   const deleteCourse = async (enrollmentId) => {
-    const options = {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', }
-    };
-    fetch(`http://localhost:8080/enrollments/${enrollmentId}`, options)
-      .then((response) => response.json())
-      .then(({ status, message }) => {
-        if (status === 404) {
-          throw new Error(message);
-        }
-        setSchedule(schedule.filter((course) => course.enrollmentId !== enrollmentId));
-        setError("");
-      })
-      .catch((error) => {
-        console.error("Error deleting course", error);
-        setError(error.message);
-      })
+    try {
+      const response = await api.delete(`${baseURL}/enrollments/${enrollmentId}`);
+      console.error(response);
+      if (response.status === 404 || response.status === 400) {
+        throw new Error("There was an error trying to delete enrollment.");
+      }
+      setSchedule(schedule.filter((course) => course.enrollmentId !== enrollmentId));
+      setError("");
+    } catch (error) {
+      console.error("Error deleting course", error);
+      setError(error.response.data.message);
+    }
   }
 
   return (
@@ -73,12 +68,38 @@ const ScheduleView = (props) => {
             )
             :
             (
-              schedule.map((course) => (
-                <div id="scourseId" key={course.courseId}>
-                  {`Course: ${course.courseId}, Time: ${course.times}`}
-                  <button type="submit" onClick={() => deleteCourse(course.enrollmentId)}>Drop course</button>
-                </div>
-              ))
+                  <TableContainer component={Paper}>
+                    <Table aria-label="assignments table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Year</TableCell>
+                          <TableCell>Semester</TableCell>
+                          <TableCell>Course-Section ID</TableCell>
+                          <TableCell>Credits</TableCell>
+                          <TableCell>Student ID</TableCell>
+                          <TableCell>Times</TableCell>
+                          <TableCell>Building</TableCell>
+                          <TableCell>Room</TableCell>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {schedule.map((course) => (
+                          <TableRow key={course.enrollmentId}>
+                            <TableCell>{course.year}</TableCell>
+                            <TableCell>{course.semester}</TableCell>
+                            <TableCell>{course.courseId}-{course.sectionId}</TableCell>
+                            <TableCell>{course.credits}</TableCell>
+                            <TableCell>{course.studentId}</TableCell>
+                            <TableCell>{course.times}</TableCell>
+                            <TableCell>{course.building}</TableCell>
+                            <TableCell>{course.room}</TableCell>
+                            <TableCell><button type="submit" onClick={() => deleteCourse(course.enrollmentId)}>Drop course</button></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
             )
         }
         <p style={{ color: "red", margin: 0 }}>{error}</p>
