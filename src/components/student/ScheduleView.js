@@ -37,7 +37,6 @@ const ScheduleView = () => {
   const deleteCourse = async (enrollmentId) => {
     try {
       const response = await api.delete(`${baseURL}/enrollments/${enrollmentId}`);
-      console.error(response);
       if (response.status === 404 || response.status === 400) {
         throw new Error("There was an error trying to delete enrollment.");
       }

@@ -33,7 +33,6 @@ const CourseEnroll = () => {
     const fetchOpenSections = async () => {
       try {
         const response = await api.get(`${baseURL}/sections/open`);
-        console.log(response);
         setOpenSections(response.data);
       } catch (error) {
         console.error('Error fetching open sections: ', error);
