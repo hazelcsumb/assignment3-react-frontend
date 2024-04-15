@@ -5,7 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { REGISTRAR_URL } from '../../Constants';
+import {baseURL} from '../../Constants';
+import {api} from '../../api';
 
 const SectionUpdate = (props)  => {
 
@@ -41,14 +42,7 @@ const SectionUpdate = (props)  => {
 
     const saveSection = async (section) => {
         try {
-          const response = await fetch (`${REGISTRAR_URL}/sections`, 
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              }, 
-              body: JSON.stringify(section),
-            });
+          const response = await api.put(`${baseURL}/sections`, JSON.stringify(section));
           if (response.ok) {
             setEditMessage("section saved");
           } else {

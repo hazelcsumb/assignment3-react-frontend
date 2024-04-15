@@ -35,14 +35,7 @@ function CoursesView(props) {
 
     const saveCourse = async (course) => {
       try {
-        const response = await api.put(`${baseURL}/courses`,
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              }, 
-              body: JSON.stringify(course),
-            });
+        const response = await api.put(`${baseURL}/courses`, JSON.stringify(course));
         if (response.ok) {
           setMessage("course saved")
           fetchCourses();
@@ -57,14 +50,7 @@ function CoursesView(props) {
 
     const addCourse = async (course) => {
       try {
-        const response = await api.post(`${baseURL}/courses`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              }, 
-              body: JSON.stringify(course),
-            });
+        const response = await api.post(`${baseURL}/courses`, JSON.stringify(course));
         if (response.ok) {
           setMessage("course added")
           fetchCourses();
@@ -79,13 +65,7 @@ function CoursesView(props) {
 
     const deleteCourse = async (courseId) => {
       try {
-        const response = await api.delete(`${baseURL}/courses/${courseId}`,
-            {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              }, 
-            });
+        const response = await api.delete(`${baseURL}/courses/${courseId}`);
         if (response.ok) {
           setMessage("Course deleted");
           fetchCourses();

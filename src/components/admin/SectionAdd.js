@@ -5,7 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { REGISTRAR_URL } from '../../Constants';
+import {baseURL} from '../../Constants';
+import {api} from '../../api';
 
 /*
  * Dialog for edit a section
@@ -46,14 +47,7 @@ const SectionAdd = (props)  => {
 
     const addSection = async (section) => {
         try {
-          const response = await fetch (`${REGISTRAR_URL}/sections`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              }, 
-              body: JSON.stringify(section),
-            });
+          const response = await api.post(`${baseURL}/sections`, JSON.stringify(section));
           if (response.ok) {
             const rc = await response.json();
             setEditMessage("section added secno="+rc.secNo);

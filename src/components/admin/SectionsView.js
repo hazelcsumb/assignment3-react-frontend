@@ -4,7 +4,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import SectionUpdate from './SectionUpdate';
 import SectionAdd from './SectionAdd';
 import Button from '@mui/material/Button';
-import { REGISTRAR_URL } from '../../Constants';
+import {baseURL} from '../../Constants';
+import {api} from '../../api';
 
 function SectionsView(props) {
     const headers = ['SecNo', 'CourseId', 'SecId',  'Year', 'Semester', 'Building', 'Room', 'Times', '', ''];
@@ -20,8 +21,8 @@ function SectionsView(props) {
             setMessage("Enter search parameters");
         } else {
           try {
-            const response = await fetch(`${
-REGISTRAR_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
+            const response = await api.get(`${
+baseURL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
             if (response.ok) {
               const data = await response.json();
               setSections(data);
@@ -37,13 +38,7 @@ REGISTRAR_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=
 
     const deleteSection = async (secNo) => {
       try {
-        const response = await fetch (`${REGISTRAR_URL}/sections/${secNo}`, 
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          }, 
-        });
+        const response = await api.delete(`${baseURL}/sections/${secNo}`);
         if (response.ok) {
           setMessage("Section deleted");
           fetchSections();
