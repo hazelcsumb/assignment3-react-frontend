@@ -12,7 +12,7 @@ import YearSemesterForm from "../common/YearSemesterForm";
 import { api } from "../../api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-const ScheduleView = (props) => {
+const ScheduleView = () => {
   // schedule_view.js
   const [error, setError] = useState("");
   const [year, setYear] = useState(years[0]);
@@ -23,14 +23,14 @@ const ScheduleView = (props) => {
     // Fetch schedule for the student from the server
     e.preventDefault();
     try {
-      const response = await api.get(`${baseURL}/enrollments?studentId=${3}&year=${year}&semester=${semester}`)
+      const response = await api.get(`${baseURL}/enrollments?year=${year}&semester=${semester}`)
       setShowSchedule(true);
       setError("");
       setSchedule(response.data);
     } catch (error) {
       console.error("Error fetching student schedule:", error);
       setShowSchedule(false);
-      setError(error.message);
+      setError(error.response.data.message);
     }
   }
 
