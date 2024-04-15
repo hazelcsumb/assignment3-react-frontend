@@ -18,7 +18,7 @@ const YearSemesterForm = (props) => {
       >
         <option disabled value="Select a year">Select a year</option>
         {
-          years.map((year) => <option value={year}>{year}</option>)
+          years.map((year) => <option key={year} value={year}>{year}</option>)
         }
       </select>
       <label htmlFor="semester">Semester</label>
@@ -30,7 +30,7 @@ const YearSemesterForm = (props) => {
       >
         <option disabled value="Select a semester">Select a semester</option>
         {
-          semesters.map((semester) => <option value={semester}>{semester}</option>)
+          semesters.map((semester) => <option key={semester}value={semester}>{semester}</option>)
         }
       </select>
       <button type="submit">{props.label}</button>
