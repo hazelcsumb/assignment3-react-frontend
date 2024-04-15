@@ -1,11 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
-import { GRADEBOOK_URL } from '../../Constants';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import  Select from "@mui/material/Select";
-import  MenuItem  from "@mui/material/MenuItem";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { baseURL } from "../../Constants";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
-// instructor view list of students enrolled in a section 
+// instructor view list of students enrolled in a section
 // use location to get section no passed from InstructorSectionsView
 // fetch the enrollments using URL /sections/{secNo}/enrollments
 // display table with columns
@@ -20,60 +28,63 @@ import  MenuItem  from "@mui/material/MenuItem";
 // Allow instructor to enter a final grade for each enrolled students
 // Instructor can save grades by issues a PUT request to URL /enrollments
 
-
-const EnrollmentsView = (props) => {
-
+const EnrollmentsView = () => {
   const location = useLocation();
-  const {secNo, courseId, secId} = location.state;
+  const { secNo, courseId, secId } = location.state;
   const [enrollments, setEnrollments] = useState([]);
 
   const updateGrade = (enrollment, e) => {
     console.log("Updating grade..");
     const new_grade = e.target.value;
-    setEnrollments(enrollments.map((enrollmentToChange) => {
-      if (enrollmentToChange.enrollmentId === enrollment.enrollmentId) {
-        enrollmentToChange.grade = new_grade;
-      }
-      return enrollmentToChange;
-    }));
-  }
+    setEnrollments(
+      enrollments.map((enrollmentToChange) => {
+        if (enrollmentToChange.enrollmentId === enrollment.enrollmentId) {
+          enrollmentToChange.grade = new_grade;
+        }
+        return enrollmentToChange;
+      }),
+    );
+  };
 
   const saveGrades = () => {
     console.log("Saving grades...");
     const options = {
-      method: "PUT", 
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(enrollments),
     };
-    fetch(`${GRADEBOOK_URL}/enrollments`, options)
-    .then(_ => {
+    fetch(`${baseURL}/enrollments`, options)
+      .then((_) => {
         alert("Grade updated in the database.");
-    })
-    .catch(_ => {
+      })
+      .catch((_) => {
         alert("Something went wrong. Please try again");
-    })
-  }
+      });
+  };
 
   // enrollments_view.js
   // Fetch enrolled students from the server
   useEffect(() => {
-    fetch(`${GRADEBOOK_URL}/sections/${secNo}/enrollments`)
-      .then(response => response.json())
-      .then(enrollments => {
+    fetch(`${baseURL}/sections/${secNo}/enrollments`)
+      .then((response) => response.json())
+      .then((enrollments) => {
         setEnrollments(enrollments);
       })
-      .catch(error => {
-        console.error('Error fetching enrollments:', error);
+      .catch((error) => {
+        console.error("Error fetching enrollments:", error);
       });
+  }, [secNo]);
+  if (enrollments.length === 0)
+    return (
+      <div style={{ color: "red", marginTop: 20 }}>
+        No enrollments for this section!
+      </div>
+    );
 
-  },[secNo]);
-  if (enrollments.length === 0) 
-    return <div style={{color: "red", marginTop: 20}}>No enrollments for this section!</div>
-
-  return(
-    <div> 
+  return (
+    <div>
       <TableContainer component={Paper}>
         <Table aria-label="Enrollments table">
           <TableHead>
@@ -90,7 +101,9 @@ const EnrollmentsView = (props) => {
               <TableRow key={enrollment.enrollmentId}>
                 <TableCell>{enrollment.enrollmentId}</TableCell>
                 <TableCell>{enrollment.studentId}</TableCell>
-                <TableCell sx={{ textTransform: 'capitalize' }}>{enrollment.name}</TableCell>
+                <TableCell sx={{ textTransform: "capitalize" }}>
+                  {enrollment.name}
+                </TableCell>
                 <TableCell>{enrollment.email}</TableCell>
                 <TableCell>
                   <Select
@@ -112,12 +125,14 @@ const EnrollmentsView = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <button 
+      <button
         onClick={saveGrades}
-        style={{marginTop:"10px", padding:"10px"}}
-      >Save Grades</button>
+        style={{ marginTop: "10px", padding: "10px" }}
+      >
+        Save Grades
+      </button>
     </div>
   );
-}
+};
 
 export default EnrollmentsView;

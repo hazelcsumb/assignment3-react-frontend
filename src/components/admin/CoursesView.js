@@ -7,10 +7,10 @@ import Button from '@mui/material/Button';
 import {baseURL} from '../../Constants';
 import {api} from '../../api';
 
-function CoursesView(props) {
-    const headers = ['CourseId', 'Title', 'Credits',  '', ''];
-    
-    const [courses, setCourses] = useState([    ]);
+function CoursesView() {
+  const headers = ["CourseId", "Title", "Credits", "", ""];
+  const [courses, setCourses] = useState([]);
+  const [message, setMessage] = useState("");
 
     const [ message, setMessage ] = useState('');
 
@@ -46,7 +46,10 @@ function CoursesView(props) {
       } catch (err) {
         setMessage("network error: "+err);
       }
+    } catch (err) {
+      setMessage("network error: " + err);
     }
+  };
 
     const addCourse = async (course) => {
       try {
@@ -61,7 +64,10 @@ function CoursesView(props) {
       } catch (err) {
         setMessage("network error: "+err);
       }
+    } catch (err) {
+      setMessage("network error: " + err);
     }
+  };
 
     const deleteCourse = async (courseId) => {
       try {
@@ -76,51 +82,79 @@ function CoursesView(props) {
       } catch (err) {
         setMessage("network error: "+err);
       }
+    } catch (err) {
+      setMessage("network error: " + err);
     }
-    
-    const onDelete = (e) => {
-      const row_idx = e.target.parentNode.parentNode.rowIndex - 1;
-      const courseId = courses[row_idx].courseId;
-      confirmAlert({
-          title: 'Confirm to delete',
-          message: 'Do you really want to delete?',
-          buttons: [
-            {
-              label: 'Yes',
-              onClick: () => deleteCourse(courseId)
-            },
-            {
-              label: 'No',
-            }
-          ]
-        });
-    }
+  };
 
-    return(
-        <div> 
-            <h3>Courses</h3>   
-            <h4>{message}</h4>     
-            <table className="Center" > 
-                <thead>
-                <tr>
-                    {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
-                </tr>
-                </thead>
-                <tbody>
-                {courses.map((c) => (
-                        <tr key={c.courseId}>
-                        <td>{c.courseId}</td>
-                        <td>{c.title}</td>
-                        <td>{c.credits}</td>
-                        <td><CourseUpdate course={c} save={saveCourse} /></td>
-                        <td><Button onClick={onDelete}>Delete</Button></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <CourseAdd save={addCourse} />
-        </div>
-    );
+  const deleteCourse = async (courseId) => {
+    try {
+      const response = await fetch(`${baseURL}/courses/${courseId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        setMessage("Course deleted");
+        fetchCourses();
+      } else {
+        const rc = await response.json();
+        setMessage("Delete failed " + rc.message);
+      }
+    } catch (err) {
+      setMessage("network error: " + err);
+    }
+  };
+
+  const onDelete = (e) => {
+    const row_idx = e.target.parentNode.parentNode.rowIndex - 1;
+    const courseId = courses[row_idx].courseId;
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Do you really want to delete?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => deleteCourse(courseId),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
+  return (
+    <div>
+      <h3>Courses</h3>
+      <h4>{message}</h4>
+      <table className="Center">
+        <thead>
+          <tr>
+            {headers.map((s, idx) => (
+              <th key={idx}>{s}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {courses.map((c) => (
+            <tr key={c.courseId}>
+              <td>{c.courseId}</td>
+              <td>{c.title}</td>
+              <td>{c.credits}</td>
+              <td>
+                <CourseUpdate course={c} save={saveCourse} />
+              </td>
+              <td>
+                <Button onClick={onDelete}>Delete</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <CourseAdd save={addCourse} />
+    </div>
+  );
 }
 export default CoursesView;
-
