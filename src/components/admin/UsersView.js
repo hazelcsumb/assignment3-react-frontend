@@ -17,8 +17,7 @@ function UsersView(props) {
     const fetchUsers = async () => {
       try {
         const response = await api.get(`${baseURL}/users`);
-        const users = await response.json();
-        setUsers(users);
+        setUsers(response.data);
       } catch (err) {
         setMessage("network error: "+err);
       }  
@@ -31,7 +30,6 @@ function UsersView(props) {
     const saveUser = async (user) => {
       try {
         const response = await api.put(`${baseURL}/users`, JSON.stringify(user));
-        const rc = await response.json();
         setMessage("user saved");
         fetchUsers();
       } catch (err) {
@@ -42,8 +40,7 @@ function UsersView(props) {
     const addUser = async (user) => {
       try {
         const response = await  api.post(`${baseURL}/users`, JSON.stringify(user));
-        const newuser = await response.json();
-        setMessage("user added id="+newuser.id);
+        setMessage("user id added");
         fetchUsers();
       } catch (err) {
         setMessage("network error: "+err);
@@ -53,7 +50,6 @@ function UsersView(props) {
     const deleteUser = async (id) => {
       try {
         const response = await api.delete(`${baseURL}/users/${id}`);
-        const rc = await response.json();
         setMessage("User deleted");
         fetchUsers();
       } catch (err) {

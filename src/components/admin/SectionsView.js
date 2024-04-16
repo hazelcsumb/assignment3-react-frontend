@@ -22,9 +22,8 @@ function SectionsView(props) {
         } else {
           try {
             const response = await api.get(`${
-baseURL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
-            const data = await response.json();
-            setSections(data);
+baseURL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);;
+            setSections(response.data);
           } catch(err) {
             setMessage("network error: "+err);
           }
@@ -34,7 +33,6 @@ baseURL}/courses/${search.courseId}/sections?year=${search.year}&semester=${sear
     const deleteSection = async (secNo) => {
       try {
         const response = await api.delete(`${baseURL}/sections/${secNo}`);
-        const rc = await response.json();
         setMessage("Section deleted");
         fetchSections();
       } catch (err) {

@@ -48,8 +48,7 @@ const SectionAdd = (props)  => {
     const addSection = async (section) => {
         try {
           const response = await api.post(`${baseURL}/sections`, JSON.stringify(section));
-          const rc = await response.json();
-          setEditMessage("section added secno="+rc.secNo);
+          setEditMessage("section number added");
         } catch (err) {
           setEditMessage("network error: "+err);
         }

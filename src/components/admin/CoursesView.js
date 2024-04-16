@@ -15,8 +15,7 @@ function CoursesView() {
     const fetchCourses = async () => {
       try {
         const response = await api.get(`${baseURL}/courses`);
-        const courses = await response.json();
-        setCourses(courses);
+        setCourses(response.data);
       } catch (err) {
         setMessage("network error: "+err);
       }  
@@ -29,8 +28,8 @@ function CoursesView() {
     const saveCourse = async (course) => {
       try {
         const response = await api.put(`${baseURL}/courses`, JSON.stringify(course));
-        const json = await response.json();
         setMessage("course saved")
+        console.log(response);
         fetchCourses();
       } catch (err) {
         setMessage("network error: "+err);
@@ -40,7 +39,6 @@ function CoursesView() {
     const addCourse = async (course) => {
       try {
         const response = await api.post(`${baseURL}/courses`, JSON.stringify(course));
-        const rc = await response.json();
         setMessage("course added")
         fetchCourses();
       } catch (err) {
@@ -51,7 +49,6 @@ function CoursesView() {
     const deleteCourse = async (courseId) => {
       try {
         const response = await api.delete(`${baseURL}/courses/${courseId}`);
-        const rc = await response.json();
         setMessage("Course deleted");
         fetchCourses();
       } catch (err) {
