@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { baseURL } from "./Constants";
 
 const Login = (props) => {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -12,7 +13,7 @@ const Login = (props) => {
     const basicu = "Basic " + btoa(user.username + ":" + user.password);
 
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch(`${baseURL}/login`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
