@@ -40,13 +40,13 @@ const AssignmentAdd = (props) => {
   const handleSubmit = async(event) => {
     event.preventDefault();
     // preparing the assignment data to be sent to the server
-
     const assignmentData = {
       title: assignmentName,
       dueDate: dueDate,
     };
 
     // sending the assignment data to the server using Axios
+    /*
     try {
       await api.post('/assignments', assignmentData);
       alert('Assignment added successfully!');
@@ -58,17 +58,18 @@ const AssignmentAdd = (props) => {
       alert('Failed to add the assignment.  Please try again.');
     }
   };
-    /* OLD CODE
+  */
+
     try {
-      props.save(assignmentData);
-      alert("Assignment added successfully!");
+      await props.save(assignmentData);
+      alert('Assignment added successfully!');
       handleClose();
-      setAssignmentName("");
-      setDueDate("");
+      setAssignmentName('');
+      setDueDate('');
     } catch (error) {
       alert("Assignment was unable to save. Please try again.");
     }
-    */
+
     /*
 
         // Sending the assignment data to the server
