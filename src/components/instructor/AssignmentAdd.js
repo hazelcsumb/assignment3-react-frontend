@@ -9,13 +9,14 @@ import {
 } from "@mui/material";
 
 import { api } from "../../api";
+import { baseURL } from "../../Constants";
 
 // complete the code.
 // instructor adds an assignment to a section
 // use mui Dialog with assignment fields Title and DueDate
 // issue a POST using URL /assignments to add the assignment
 
-const AssignmentAdd = (props) => {
+const AssignmentAdd = () => {
   const [open, setOpen] = useState(false); // controls the dialog's open/close state
   const [assignmentName, setAssignmentName] = useState(""); //state for the assignment's name
   const [dueDate, setDueDate] = useState(""); // state for the assignment's due date
@@ -30,13 +31,8 @@ const AssignmentAdd = (props) => {
     setOpen(false);
   };
 
+
   // handles the assignment form
-
-  /* OLD CODE
-  const handleSubmit = (event) => {
-    event.preventDefault(); // prevents the default form submission action
-  */
-
   const handleSubmit = async(event) => {
     event.preventDefault();
     // preparing the assignment data to be sent to the server
@@ -46,9 +42,8 @@ const AssignmentAdd = (props) => {
     };
 
     // sending the assignment data to the server using Axios
-    /*
     try {
-      await api.post('/assignments', assignmentData);
+      await api.post(`${baseURL}/assignments`, JSON.stringify(assignmentData));
       alert('Assignment added successfully!');
       handleClose(); // close the dialog
       setAssignmentName(''); // reset assignment name
@@ -58,45 +53,6 @@ const AssignmentAdd = (props) => {
       alert('Failed to add the assignment.  Please try again.');
     }
   };
-  */
-
-    try {
-      await props.save(assignmentData);
-      alert('Assignment added successfully!');
-      handleClose();
-      setAssignmentName('');
-      setDueDate('');
-    } catch (error) {
-      alert("Assignment was unable to save. Please try again.");
-    }
-
-    /*
-
-        // Sending the assignment data to the server
-
-        fetch(`${SERVER_URL}/assignments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(assignmentData),
-        })
-
-            .then(response => {
-                if (response.ok) {
-                    alert('Assignment added successfully!');
-                    handleClose(); // close the dialog
-                    setAssignmentName('');
-                    setDueDate('');
-                } else {
-                    alert('Failed to add the assignment.  Try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error adding assignment:', error);
-                alert('An error occured. Please try again.');
-            });
-    */
 
   return (
     <>
