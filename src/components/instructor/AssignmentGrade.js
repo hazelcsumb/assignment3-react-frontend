@@ -14,8 +14,10 @@ const AssignmentGrade = () => {
   // State to store the list of GradeDTO objects fetched from server
   const location = useLocation();
   const [grades, setGrades] = useState([]);
-  const { assignmentId } = location.state;
+  const [error, setError] = useState("")
+  const {assignmentId} = location.state;
 
+  /* OLD Code
   // Function to handle score changes for each grade input field
   const onChange = (index, newScore) => {
     const updatedGrades = grades.map((grade, idx) => {
@@ -26,7 +28,28 @@ const AssignmentGrade = () => {
     });
     setGrades(updatedGrades); // update the state with the new grades array
   };
+  */
 
+  // Function to handle changes to score inputs
+  const onChange = (index, newScore) => {
+    const updatedGrades = grades.map((grade, idx) =>
+        idx === index ? {...grade, score: newScore} : grade
+  );
+  setGrades(updatedGrades);
+};
+  // Function to fetch grades from server
+  const fetchGrades = async () =>{
+    try {
+      // Make GET request to fetch grades for a specific assignment
+      const response = await api.get(`${baseURL}/assignment/${assignmentId}/grades`);
+      setGrades(response.data); // updating state with fetched grades
+    } catch(error) {
+      console.error("Error fetching grades: ", error);
+      setError("Failed to fetch grades."); // setting error message in state
+    }
+  };
+
+  /* OLD code
   const fetchGrades = async () => {
     try {
       // URL
@@ -41,13 +64,15 @@ const AssignmentGrade = () => {
       console.error("Error fetching grades ", error);
     }
   };
+   */
 
   // Fetch grades from the server
   useEffect(() => {
     fetchGrades();
   }, [assignmentId]); // dependency array re-fetch if assignmentId changes
 
-  const saveGrades = async () => {
+  /* OLD code
+    const saveGrades = async () => {
     try {
       const options = {
         method: "PUT",
@@ -65,19 +90,33 @@ const AssignmentGrade = () => {
         await fetchGrades();
         alert("Grades updated!");
       }
-      */
+
     } catch (err) {
       console.error("Error saving grades", err);
     }
   };
+ */
 
-  if (grades.length === 0)
+  const saveGrades = async() => {
+    try {
+      const response = await api.put(`${baseURL}/grades`, grades);
+      if(response.status === 200){
+        alert("Grades updated successfully!");
+        fetchGrades(); // refresh the grade after update
+      }
+    } catch(error) {
+      console.error("Error saving grades", error);
+      alert("Failed to save grades");
+    }
+  };
+
+  if (grades.length === 0) {
     return (
-      <div style={{ color: "red", marginTop: 20 }}>
-        No students to grade for this assignment!
-      </div>
+        <div style={{color: "red", marginTop: 20}}>
+          {error || "No students to grade for this assignment!"}
+        </div>
     );
-
+  }
   // Display grades as a table
   return (
     <div
