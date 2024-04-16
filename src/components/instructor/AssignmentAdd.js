@@ -8,6 +8,8 @@ import {
   TextField,
 } from "@mui/material";
 
+import { api } from "../../api";
+
 // complete the code.
 // instructor adds an assignment to a section
 // use mui Dialog with assignment fields Title and DueDate
@@ -29,15 +31,34 @@ const AssignmentAdd = (props) => {
   };
 
   // handles the assignment form
+
+  /* OLD CODE
   const handleSubmit = (event) => {
     event.preventDefault(); // prevents the default form submission action
+  */
 
+  const handleSubmit = async(event) => {
+    event.preventDefault();
     // preparing the assignment data to be sent to the server
 
     const assignmentData = {
       title: assignmentName,
       dueDate: dueDate,
     };
+
+    // sending the assignment data to the server using Axios
+    try {
+      await api.post('/assignments', assignmentData);
+      alert('Assignment added successfully!');
+      handleClose(); // close the dialog
+      setAssignmentName(''); // reset assignment name
+      setDueDate(''); // Reset the due date
+    } catch (error) {
+      console.error('Error adding assignment:', error);
+      alert('Failed to add the assignment.  Please try again.');
+    }
+  };
+    /* OLD CODE
     try {
       props.save(assignmentData);
       alert("Assignment added successfully!");
@@ -47,7 +68,7 @@ const AssignmentAdd = (props) => {
     } catch (error) {
       alert("Assignment was unable to save. Please try again.");
     }
-
+    */
     /*
 
         // Sending the assignment data to the server
@@ -75,7 +96,6 @@ const AssignmentAdd = (props) => {
                 alert('An error occured. Please try again.');
             });
     */
-  };
 
   return (
     <>
