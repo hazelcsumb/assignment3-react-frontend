@@ -6,6 +6,7 @@ import AssignmentUpdate from "./AssignmentUpdate";
 import AssignmentAdd from "./AssignmentAdd";
 import Button from "@mui/material/Button";
 import { baseURL } from "../../Constants";
+import { api } from "../../api";
 import AssignmentGrade from "./AssignmentGrade";
 
 // instructor views assignments for their section
@@ -25,16 +26,8 @@ const AssignmentsView = () => {
 
   const fetchAssignments = async () => {
     try {
-      const response = await fetch(
-        `${baseURL}/sections/${secNo}/assignments`,
-      );
-      if (response.ok) {
-        const assignments = await response.json();
-        setAssignments(assignments);
-      } else {
-        const json = await response.json();
-        setMessage("response error: " + json.message);
-      }
+      const response = await api.get(`${baseURL}/sections/${secNo}/assignments`);
+      setAssignments(response.data);
     } catch (err) {
       setMessage("network error: " + err);
     }
@@ -47,20 +40,9 @@ const AssignmentsView = () => {
   const saveAssignment = async (assignment) => {
     try {
       // const response = await fetch (`${SERVER_URL}/sections/${secNo}/assignments`,
-      const response = await fetch(`${baseURL}/assignments`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(assignment),
-      });
-      if (response.ok) {
-        setMessage("Assignment saved");
-        fetchAssignments();
-      } else {
-        const json = await response.json();
-        setMessage("response error: " + json.message);
-      }
+      await api.put(`${baseURL}/assignments`, JSON.stringify(assignment));
+      setMessage("Assignment saved");
+      fetchAssignments();
     } catch (err) {
       setMessage("network error: " + err);
     }
@@ -75,20 +57,9 @@ const AssignmentsView = () => {
         secNo,
       };
 
-      const response = await fetch(`${baseURL}/assignments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAssignment),
-      });
-      if (response.ok) {
-        setMessage("Assignment added");
-        fetchAssignments();
-      } else {
-        const rc = await response.json();
-        setMessage(rc.message);
-      }
+      await api.post(`${baseURL}/assignments`, JSON.stringify(newAssignment));
+      setMessage("Assignment added");
+      fetchAssignments();
     } catch (err) {
       setMessage("network error: " + err);
     }
@@ -96,22 +67,9 @@ const AssignmentsView = () => {
 
   const deleteAssignment = async (assignmentId) => {
     try {
-      const response = await fetch(
-        `${baseURL}/assignments/${assignmentId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      if (response.ok) {
-        setMessage("Assignment deleted");
-        fetchAssignments();
-      } else {
-        const rc = await response.json();
-        setMessage("Delete failed " + rc.message);
-      }
+      await api.delete(`${baseURL}/assignments/${assignmentId}`);
+      setMessage("Assignment deleted");
+      fetchAssignments();
     } catch (err) {
       setMessage("network error: " + err);
     }
@@ -153,11 +111,11 @@ const AssignmentsView = () => {
   //     });
 
   if (assignments.length === 0)
-    return (
-      <div style={{ color: "red", marginTop: 20 }}>
-        No assignments for this section!
-      </div>
-    );
+  return (
+    <div style={{ color: "red", marginTop: 20 }}>
+      No assignments for this section!
+    </div>
+  );
 
   return (
     <>

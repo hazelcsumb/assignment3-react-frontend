@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { api } from "../../api";
 
 // instructor view list of students enrolled in a section
 // use location to get section no passed from InstructorSectionsView
@@ -46,42 +47,37 @@ const EnrollmentsView = () => {
     );
   };
 
-  const saveGrades = () => {
+  const saveGrades = async () => {
     console.log("Saving grades...");
-    const options = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(enrollments),
-    };
-    fetch(`${baseURL}/enrollments`, options)
-      .then((_) => {
-        alert("Grade updated in the database.");
-      })
-      .catch((_) => {
-        alert("Something went wrong. Please try again");
-      });
+    try {
+      await api.put(`${baseURL}/enrollments`, JSON.stringify(enrollments));
+      alert("Grades updated in the database.");
+    } catch (error) {
+      alert("Something went wrong. Please try again");
+    }
   };
 
   // enrollments_view.js
   // Fetch enrolled students from the server
   useEffect(() => {
-    fetch(`${baseURL}/sections/${secNo}/enrollments`)
-      .then((response) => response.json())
-      .then((enrollments) => {
-        setEnrollments(enrollments);
-      })
-      .catch((error) => {
+    const fetchEnrollments = async () => {
+      try {
+        const response = await api.get(`${baseURL}/sections/${secNo}/enrollments`);
+        setEnrollments(response.data);
+      } catch (error) {
         console.error("Error fetching enrollments:", error);
-      });
+      }
+    }
+    fetchEnrollments();
+
   }, [secNo]);
+
   if (enrollments.length === 0)
-    return (
-      <div style={{ color: "red", marginTop: 20 }}>
-        No enrollments for this section!
-      </div>
-    );
+  return (
+    <div style={{ color: "red", marginTop: 20 }}>
+      No enrollments for this section!
+    </div>
+  );
 
   return (
     <div>

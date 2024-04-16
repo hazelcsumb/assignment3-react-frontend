@@ -8,8 +8,8 @@ const InstructorHome = () => {
     setTerm({ ...term, [event.target.name]: event.target.value });
   };
 
-  return (
-    <>
+  // Old table not being used
+  /*
       <table className="Center">
         <tbody>
           <tr>
@@ -38,10 +38,14 @@ const InstructorHome = () => {
           </tr>
         </tbody>
       </table>
+  */
+
+  return (
+    <div>
       <Link to="/sections" state={term}>
         Show Sections
       </Link>
-    </>
+    </div>
   );
 };
 
