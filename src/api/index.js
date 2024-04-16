@@ -33,3 +33,12 @@ export const api = axios.create({
     Authorization: sessionStorage.getItem("jwt"),
   },
 });
+
+// Allow axios to intercept requests to update the jwt 
+// (if a user logged out and logged in as someone else)
+// This prevents old stale JWT's from being used if the user didn't log out correctly
+// or if your app gets restarted and the old JWT is stuck in sessionStorage
+api.interceptors.request.use(function (config) {
+  config.headers.Authorization = sessionStorage.getItem("jwt");
+  return config;
+});
