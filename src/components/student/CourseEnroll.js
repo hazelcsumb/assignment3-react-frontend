@@ -1,110 +1,107 @@
 import React, {useState, useEffect} from 'react';
-import { REGISTRAR_SERVICE, studentId } from '../../Constants';
-
-// students displays a list of open sections for a 
-// use the URL /sections/open
-// the REST api returns a list of SectionDTO objects
-
-// the student can select a section and enroll
-// issue a POST with the URL /enrollments?secNo= &studentId=3
-// studentId=3 will be removed in assignment 7.
-//
-//
-//
-// Rubric:
-// CourseEnroll
-// Fetches and displays a list of open sections using URL /sections/open
-// Allows user to select a section
-// Issues a POST request to /enrollments/section/{secNo}?studentId=
-// Displays success or error message from POST
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import Button from '@mui/material/Button';
+import {REGISTRAR_SERVICE} from '../../Constants';
 
 const CourseEnroll = (props) => {
 
-  // State to store the list of open sections fetched from server
-  const [openSections, setOpenSections] = useState([]);
+  // student adds a course to their schedule
 
-  // State to store the user's selected section to enroll in
-  const [selectedSection, setSelectedSection] = useState('');
+  const [sections, setSections] = useState([]);
+  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    // using the URL /sections/open to get sections that are open
-    fetch(`${REGISTRAR_SERVICE}/sections/open`)
-      .then(response => response.json())
-      .then(data => setOpenSections(data)) // Set fetched data (SectionDTO objects)
-      .catch(error => console.error('Error fetching open sections: ', error));
-  }, []); // empty dependency array means this runs only once after initial rendering
+  const fetchSections = async () => {
+    // get list of open sections for enrollment
+    try {
+      const response = await fetch(`${REGISTRAR_SERVICE}/sections/open`);
+      if (response.ok) {
+        const data = await response.json();
+        setSections(data);
+      } else {
+        const rc = await response.json();
+        setMessage(rc.message);
+      }
+    } catch (err) {
+      setMessage("network error "+err);
+    }
+  }
 
-  // Handles form submission for enrolling
-  const handleSubmit = (event) => {
-    event.preventDefault(); // prevents the default form submission
-    // Issue a POST request to enroll in the selected section
-    // **use studentId = 3 temporarily, will be removed in assignment 7
+  useEffect( () => {
+    fetchSections();
+  }, []);
 
-    fetch(`${REGISTRAR_SERVICE}/enrollments/sections/${selectedSection}?studentId=${studentId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => {
-        if (response.ok) {
-          alert('Enrolled successfully!'); // success message
-          setSelectedSection(''); // resets selected section state
-        } else {
-          response.json()
-          .then((data) => alert(data.message))
+  const addSection = async (secNo) => {
+    try {
+      const response = await fetch(`${REGISTRAR_SERVICE}/enrollments/sections/${secNo}?studentId=3`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+      if (response.ok) {
+        const data = await response.json();
+        setMessage("section added. enrollment id=" + data.enrollmentId);
+      } else {
+        const rc = await response.json();
+        setMessage(rc.message);
+      }
+    } catch (err) {
+      setMessage("network error "+err);
+    }
+
+  }
+
+  const onAdd = (e) => {
+    const row_idx = e.target.parentNode.parentNode.rowIndex - 1;
+    const secNo = sections[row_idx].secNo;
+    confirmAlert({
+      title: 'Confirm to add',
+      message: 'Do you really want to add?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => addSection(secNo)
+        },
+        {
+          label: 'No',
         }
-      })
-      .catch(error => console.error('Error enrolling in the course: ', error));
-  };
-  /*
-    // course_enroll.js
-    document.getElementById('enrollForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Fetch form data
-        const courseId = document.getElementById('courseId').value;
-
-        // Send data to the server to enroll the student in the course
-        // Example: Using fetch API
-        fetch(`/api/enroll/${courseId}`, {
-            method: 'POST'
-        }).then(response => {
-            // Handle response from the server
-            // Example: Display success message
-            alert('Enrolled successfully!');
-            // Optionally, redirect to another page or update the UI
-        }).catch(error => {
-            // Handle error
-            console.error('Error enrolling in the course:', error);
-        });
+      ]
     });
+  }
 
-    */
+  const headers = ['section No', 'year', 'semster', 'course Id', 'section', 'title', 'building', 'room', 'times', 'instructor', ''];
 
-  // Note: make selection required to ensure a section a chosen
-  // Also display section name and number
   return(
-    <div>
-      <h3>Enroll in a Course Section</h3>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="courseId">Select a Section:</label>
-        <select
-          id="courseId"
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-        >
-          <option value="">Select...</option>
-          {openSections.map((section) => (
-            <option key={section.secNo} value={section.secNo}>
-              {section.courseId} - Section {section.secNo}
-            </option>
+      <div>
+        <h4 id="message">{message}</h4>
+        <h3>Open Sections Available for Enrollment</h3>
+        <table className="Center">
+          <thead>
+          <tr>
+            {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
+          </tr>
+          </thead>
+          <tbody>
+          {sections.map((s) => (
+              <tr key={s.secNo}>
+                <td>{s.secNo}</td>
+                <td>{s.year}</td>
+                <td>{s.courseId}</td>
+                <td>{s.secId}</td>
+                <td>{s.title}</td>
+                <td>{s.building}</td>
+                <td>{s.room}</td>
+                <td>{s.times}</td>
+                <td>{s.instructorName}</td>
+                <td><Button onClick={onAdd}>Add Course</Button></td>
+              </tr>
           ))}
-        </select>
-        <button type="submit">Enroll</button>
-      </form>
-    </div>
+          </tbody>
+        </table>
+      </div>
   );
-};
-
+}
 
 export default CourseEnroll;
