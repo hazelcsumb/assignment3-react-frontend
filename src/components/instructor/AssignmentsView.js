@@ -51,7 +51,7 @@ const AssignmentsView = (props) => {
         })
         .then(response => response.json() )
         .then(data => {
-          setMessage("Assignment created id="+data.id);
+          setMessage("Assignment created");
           fetchAssignments(secNo);
         })
         .catch(err => setMessage(err));
@@ -117,7 +117,7 @@ const AssignmentsView = (props) => {
 
   return(
       <div>
-        <h3>{message}</h3>
+        <h3 id="message">{message}</h3>
 
         { assignments.length > 0 &&
             <>
