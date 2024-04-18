@@ -1,110 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { GRADEBOOK_SERVICE } from '../../Constants';
-import { useLocation } from "react-router-dom";
-
-// instructor enters students' grades for an assignment
-// fetch the grades using the URL /assignment/{id}/grades
-// REST api returns a list of GradeDTO objects
-// display the list as a table with columns 'gradeId', 'student name', 'student email', 'score' 
-// score column is an input field 
-//  <input type="text" name="score" value={g.score} onChange={onChange} />
-
+import React, { useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import {GRADEBOOK_SERVICE} from '../../Constants';
 
 const AssignmentGrade = (props) => {
 
-  // State to store the list of GradeDTO objects fetched from server
-  const location = useLocation();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
   const [grades, setGrades] = useState([]);
-  const {assignmentId}= location.state;
 
-  // Function to handle score changes for each grade input field
-  const onChange = (index, newScore) => {
-    const updatedGrades = grades.map((grade, idx) => {
-      if (idx === index) {
-        return {...grade, score: newScore }; //update the score of the modified grade
-      }
-      return grade; // return unmodified grades as is
-    });
-    setGrades(updatedGrades); // update the state with the new grades array
+
+  const editOpen = () => {
+    setOpen(true);
+    setMessage('');
+    fetchGrades(props.assignment.id);
   };
 
-  const fetchGrades = async () => {
-    try{
-      // URL
-      const response = await fetch(`${GRADEBOOK_SERVICE}/assignment/${assignmentId}/grades`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch grades');
-      }
-      const data = await response.json(); // parse the JSON response
-      setGrades(data); // set fetched grades data to state
-    } catch(error) {
-      console.error('Error fetching grades ', error);
-    }
-  };
-
-  // Fetch grades from the server
-  useEffect(() => {
-    fetchGrades();
-  }, [assignmentId]); // dependency array re-fetch if assignmentId changes
-
-  const saveGrades = async () => {
+  const fetchGrades = async (id) => {
     try {
-      const options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(grades)
-      }
-      const response = await fetch(`${GRADEBOOK_SERVICE}/grades`, options);
+      const response = await fetch(`${GRADEBOOK_SERVICE}/assignment/${id}/grades`);
       if (response.ok) {
-        console.log("Grades updated!")
-        await fetchGrades();
-        alert("Grades updated!")
+        const data = await response.json();
+        setGrades(data);
+      } else {
+        const rc = await response.json();
+        setMessage(rc.message);
       }
-    } catch(err) {
-      console.error('Error saving grades', err);
+    } catch (err) {
+      setMessage("network error "+err);
     }
   }
 
-  if (grades.length === 0) 
-    return <div style={{color: "red", marginTop: 20}}>No students to grade for this assignment!</div>
-
-  // Display grades as a table
-  return(
-    <div style={{display: "flex", flexDirection: "column", gap: 20, alignContent: "center", justifyContent: "center"}}>
-      <h3>Assignment Grades</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Grade ID</th>
-            <th>Student Name</th>
-            <th>Student Email</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
+  const onSave = async () => {
+    try {
+      const response = await fetch (`${GRADEBOOK_SERVICE}/grades`,
           {
-            grades.map((grade,index) => (
-              <tr key = {grade.gradeId}>
-                <td>{grade.gradeId}</td>
-                <td>{grade.studentName}</td>
-                <td>{grade.studentEmail}</td>
-                <td>
-                  <input
-                    type = "text"
-                    name = "score"
-                    value = {grade.score}
-                    onChange = {(e) => onChange(index, e.target.value)}
-                  />
-                </td>
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(grades),
+          });
+      if (response.ok) {
+        setMessage("Grades saved");
+      } else {
+        const rc = await response.json();
+        setMessage(rc.message);
+      }
+    } catch (err) {
+      setMessage("network error "+err);
+    }
+  }
+
+  const editClose = () => {
+    setOpen(false);
+    setGrades([]);
+    setMessage('');
+  };
+
+  const onChange = (e) => {
+    const copy_grades = grades.map((x) => x);
+    const row_idx = e.target.parentNode.parentNode.rowIndex - 1;
+    copy_grades[row_idx] = {...(copy_grades[row_idx]), score: e.target.value};
+    setGrades(copy_grades);
+  }
+
+  const headers = ['gradeId', 'student name', 'student email', 'score' ];
+
+  return(
+      <>
+        <Button onClick={editOpen}>Grade</Button>
+        <Dialog open={open} >
+          <DialogTitle>Grade Assignment</DialogTitle>
+          <DialogContent  style={{paddingTop: 20}} >
+            <h4>{message}</h4>
+            <table className="Center" >
+              <thead>
+              <tr>
+                {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
               </tr>
-            ))}
-        </tbody>
-      </table>
-      <button onClick={saveGrades}>Save Grades</button>
-    </div>
+              </thead>
+              <tbody>
+              {grades.map((g) => (
+                  <tr key={g.gradeId}>
+                    <td>{g.gradeId}</td>
+                    <td>{g.studentName}</td>
+                    <td>{g.studentEmail}</td>
+                    <td><input type="text"  name="score" value={g.score}  onChange={onChange} /></td>
+                  </tr>
+              ))}
+              </tbody>
+            </table>
+          </DialogContent>
+          <DialogActions>
+            <Button color="secondary" onClick={editClose}>Close</Button>
+            <Button color="primary" onClick={onSave}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      </>
   );
-};
+}
 
 export default AssignmentGrade;

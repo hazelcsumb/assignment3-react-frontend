@@ -1,117 +1,58 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { SERVER_URL } from '../../Constants';
-
-// complete the code.
-// instructor adds an assignment to a section
-// use mui Dialog with assignment fields Title and DueDate
-// issue a POST using URL /assignments to add the assignment
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const AssignmentAdd = (props)  => {
-  const [open, setOpen] = useState(false); // controls the dialog's open/close state
-  const [assignmentName, setAssignmentName] = useState(''); //state for the assignment's name
-  const [dueDate, setDueDate] = useState(''); // state for the assignment's due date
 
-  // handles opening of the dialog
-  const handleClickOpen = () => {
+  const [open, setOpen] = useState(false);
+  const [editMessage, setEditMessage] = useState('');
+  const [assignment, setAssignment] = useState({ title:'', dueDate:''});
+
+  /*
+   *  dialog for add assignment
+   */
+  const editOpen = () => {
     setOpen(true);
+    setEditMessage('');
+    setAssignment({ title:'', dueDate:''});
   };
 
-  // handles the closing of the dialog
-  const handleClose = () => {
+  const editClose = () => {
     setOpen(false);
+    setAssignment({ title:'', dueDate:''});
+    setEditMessage('');
   };
 
-  // handles the assignment form
-  const handleSubmit = (event) => {
-    event.preventDefault(); // prevents the default form submission action
+  const editChange = (event) => {
+    setAssignment({...assignment,  [event.target.name]:event.target.value})
+  }
 
-
-    // preparing the assignment data to be sent to the server
-
-        const assignmentData = {
-            title: assignmentName,
-            dueDate: dueDate,
-        };
-    try {
-      props.save(assignmentData);
-      alert('Assignment added successfully!');
-      handleClose();
-      setAssignmentName('');
-      setDueDate('');
-    }
-    catch (error) {
-      alert('Assignment was unable to save. Please try again.');
-    }
-
-    /*
-
-        // Sending the assignment data to the server
-
-        fetch(`${SERVER_URL}/assignments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(assignmentData),
-        })
-
-            .then(response => {
-                if (response.ok) {
-                    alert('Assignment added successfully!');
-                    handleClose(); // close the dialog
-                    setAssignmentName('');
-                    setDueDate('');
-                } else {
-                    alert('Failed to add the assignment.  Try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error adding assignment:', error);
-                alert('An error occured. Please try again.');
-            });
-    */
-  };
+  const onSave = () => {
+    props.save(assignment);
+    editClose();
+  }
 
   return (
-    <>
-      <Button variant="outlined" onClick={handleClickOpen}>Add Assignment</Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Assignment</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit} noValidate>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="assignmentName"
-              label="Assignment Title"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={assignmentName}
-              onChange={(e) => setAssignmentName(e.target.value)}
-            />
-            <TextField
-              margin = "dense"
-              id="dueDate"
-              label="Due Date"
-              type="date"
-              fullWidth
-              variant="outlined"
-              InputLabelProps={{ shrink: true}}
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
-
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button id="submit" type="submit">Add</Button>
-            </DialogActions>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-};
+      <>
+        <Button onClick={editOpen}>Add Assignment</Button>
+        <Dialog open={open} >
+          <DialogTitle>Add Assignment</DialogTitle>
+          <DialogContent  style={{paddingTop: 20}} >
+            <h4>{editMessage}</h4>
+            <TextField style={{padding:10}} autoFocus fullWidth label="title" name="title" value={assignment.title} onChange={editChange}  />
+            <TextField style={{padding:10}} fullWidth label="dueDate" name="dueDate" value={assignment.dueDate} onChange={editChange}  />
+          </DialogContent>
+          <DialogActions>
+            <Button color="secondary" onClick={editClose}>Close</Button>
+            <Button color="primary" onClick={onSave}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      </>
+  )
+}
 
 export default AssignmentAdd;

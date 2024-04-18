@@ -6,13 +6,25 @@ const InstructorHome = () => {
     const [term, setTerm] = useState({year:'', semester:''});
 
     const onChange = (event) => {
-    setTerm({...term, [event.target.name]:event.target.value});
+        setTerm({...term, [event.target.name]:event.target.value});
     }
 
     return (
-        <div style={{marginTop: 20}}>
+        <>
+            <table className="Center">
+                <tbody>
+                <tr>
+                    <td>Year:</td>
+                    <td><input type="text" id="year" name="year" value={term.year} onChange={onChange} /></td>
+                </tr>
+                <tr>
+                    <td>Semester:</td>
+                    <td><input type="text" id="semester" name="semester" value={term.semester} onChange={onChange} /></td>
+                </tr>
+                </tbody>
+            </table>
             <Link to='/sections' state={term}>Show Sections</Link>
-        </div>
+        </>
     )
 };
 
