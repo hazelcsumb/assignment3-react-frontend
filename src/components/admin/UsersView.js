@@ -65,8 +65,7 @@ function UsersView(props) {
             body: JSON.stringify(user),
           });
         if (response.ok) {
-          const newuser = await response.json();
-          setMessage("user added id="+newuser.id);
+          setMessage("user added");
           fetchUsers();
         } else {
           const rc = await response.json();
@@ -120,7 +119,7 @@ function UsersView(props) {
     return(
         <> 
             <h3>Users</h3>   
-            <h4>{message}</h4>     
+            <h4 id="message">{message}</h4>
             <table className="Center" > 
                 <thead>
                   <tr>

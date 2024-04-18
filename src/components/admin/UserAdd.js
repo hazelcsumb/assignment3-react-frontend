@@ -45,18 +45,18 @@ const UserAdd = (props)  => {
 
     return (
         <>
-            <Button onClick={editOpen}>Add User</Button>
+            <Button id="addUser" onClick={editOpen}>Add User</Button>
             <Dialog open={open} >
                 <DialogTitle>Add User</DialogTitle>
                 <DialogContent  style={{paddingTop: 20}} >
                     <h4>{editMessage}</h4>
-                    <TextField style={{padding:10}} autoFocus fullWidth label="name" name="name" value={user.name} onChange={editChange}  /> 
-                    <TextField style={{padding:10}} fullWidth label="email" name="email" value={user.email} onChange={editChange}  /> 
-                    <TextField style={{padding:10}} fullWidth label="type" name="type" value={user.type} onChange={editChange}  /> 
+                    <TextField id="uname" style={{padding:10}} autoFocus fullWidth label="name" name="name" value={user.name} onChange={editChange}  />
+                    <TextField id="uemail" style={{padding:10}} fullWidth label="email" name="email" value={user.email} onChange={editChange}  />
+                    <TextField id="utype" style={{padding:10}} fullWidth label="type" name="type" value={user.type} onChange={editChange}  />
                 </DialogContent>
                 <DialogActions>
-                    <Button color="secondary" onClick={editClose}>Close</Button>
-                    <Button color="primary" onClick={onSave}>Save</Button>
+                    <Button id="close" color="secondary" onClick={editClose}>Close</Button>
+                    <Button id="save" color="primary" onClick={onSave}>Save</Button>
                 </DialogActions>
             </Dialog> 
         </>                       
